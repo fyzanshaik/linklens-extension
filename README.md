@@ -2,7 +2,7 @@
 
 Glimpse is a powerful, lightweight Chrome extension that fundamentally improves your browsing efficiency. It allows you to preview any link in a clean, modal overlay without ever leaving your current page. Say goodbye to endless context switching and tab management.
 
-[![Glimpse Preview](https://jmp.sh/s/EQjgLVpaj6ef0Ze9WL3N)](https://github.com/fyzanshaik/glimpse)
+[![Glimpse Preview](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3pnanY1aDRienlsOXMxb3RmMHRhdnk3c3FzYmlvZmJ5YWdxOTRzaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CVaJcEMA3mFZ5eMWxF/giphy.gif)](https://github.com/fyzanshaik/glimpse)
 
 *A brief animation showing Glimpse in action.*
 
