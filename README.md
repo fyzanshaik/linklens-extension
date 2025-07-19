@@ -1,121 +1,83 @@
-# 👁 Glimpse - Chrome Extension
+# 👁️ Glimpse: Instant Link Previews
 
-**Glimpse** is a lightweight Chrome extension that allows you to preview links in a floating overlay window without leaving your current page. Perfect for research, productivity, and seamless browsing.
+Glimpse is a powerful, lightweight Chrome extension that fundamentally improves your browsing efficiency. It allows you to preview any link in a clean, modal overlay without ever leaving your current page. Say goodbye to endless context switching and tab management.
 
-## ✨ Features
+[![Glimpse Preview](https://i.imgur.com/example.gif)](https://chrome.google.com/webstore/detail/glimpse/your-extension-id)
 
-- **🔍 Instant Link Previews**: Hold `Ctrl` (or `⌘ Cmd` on Mac) and click any link to preview it
-- **📱 Draggable & Resizable**: Move and resize the preview window to your liking
-- **⚡ Seamless Expansion**: Expand preview to a new tab without reloading
-- **⌨️ Keyboard Shortcuts**: Press `Escape` to close the preview
-- **🛡️ Smart Error Handling**: Graceful fallback for sites that block embedding
-- **🌙 Dark Mode Support**: Automatically adapts to your system theme
+*A brief animation showing Glimpse in action.*
+
+---
+
+## ✨ Core Features
+
+*   **🖱️ Instant Previews:** Simply hold `Ctrl` (or `Cmd` on Mac) and click any link to instantly open it in a Glimpse window.
+*   **🖼️ Modern Modal UI:** Previews appear in a large, centered overlay with a blurred background, focusing your attention.
+*   **🚀 Works Everywhere:** Glimpse's robust architecture works on everything from simple blogs to complex, JavaScript-heavy web apps.
+*   **🔐 Secure & Private:** Glimpse is built with modern security policies and requests minimal permissions. It processes everything locally and collects no data.
+*   **UX-Focused:**
+    *   Click anywhere outside the preview to close it.
+    *   Press the `Escape` key to close.
+    *   The background page is locked from scrolling while a preview is active.
+    *   Seamlessly open the original link in a new tab with the "Expand" button.
+
+---
 
 ## 🚀 Installation
 
+### Official (Coming Soon)
+
+Glimpse will be available on the Chrome Web Store soon.
+
 ### From Source (Developer Mode)
 
-1. **Download or Clone** this repository
-2. **Open Chrome** and navigate to `chrome://extensions/`
-3. **Enable Developer Mode** (toggle in the top-right corner)
-4. **Click "Load unpacked"** and select the extension folder
-5. **Pin the extension** to your toolbar for easy access
+1.  **Download or Clone:** Get the latest version of the code from this repository.
+2.  **Open Chrome Extensions:** Navigate to `chrome://extensions/` in your browser.
+3.  **Enable Developer Mode:** Find the "Developer mode" toggle in the top-right corner and turn it on.
+4.  **Load the Extension:** Click the "Load unpacked" button and select the folder containing the Glimpse source code.
+5.  **Ready to Go!** Glimpse is now active. You can pin it to your toolbar for easy access.
 
-### Requirements
+---
 
-- Chrome 88+ (Manifest V3 support)
-- No additional permissions beyond what's listed in the manifest
+## 🔧 How It Works: The Technical Details
 
-## 📖 How to Use
+Glimpse uses a sophisticated, multi-layered approach to provide a seamless and secure preview experience.
 
-### Basic Usage
+### 1. The Trigger: `mousedown` Event Listener
 
-1. **Hold `Ctrl`** (or `⌘ Cmd` on Mac)
-2. **Click any link** on any webpage
-3. **View the preview** in the floating overlay
-4. **Close** with `Escape` key or the X button
+Glimpse listens for the `mousedown` event, which fires earlier than a standard `click`. This allows it to reliably intercept a link activation before a website's own scripts can interfere, ensuring Glimpse works on complex web apps.
 
-### Advanced Features
+### 2. The Sandbox: `iframe` with `allow-top-navigation-by-user-activation`
 
-- **📏 Resize**: Drag the corners or edges to resize the preview window
-- **🚚 Move**: Drag the header bar to reposition the window
-- **🆕 Expand**: Click the expand button (↗) to open in a new tab seamlessly
-- **❌ Close**: Click the X button or press `Escape` to close
+Previews are loaded into a sandboxed `<iframe>`. The key to our solution is the `allow-top-navigation-by-user-activation` sandbox setting. This is a modern browser security feature that prevents the loaded page from using JavaScript to "bust" out of the frame and redirect the main page, while still allowing the user to click links inside the preview that open new tabs.
 
-### Supported Links
+### 3. The Network Layer: `declarativeNetRequest`
 
-- ✅ `http://` and `https://` URLs
-- ❌ `mailto:`, `tel:`, `ftp:` and other protocols are ignored
-
-## 🔧 Technical Details
-
-### Architecture
-
-- **Manifest V3** - Latest Chrome extension standard
-- **Content Script** - Handles click events and overlay creation
-- **Background Service Worker** - Manages hidden tabs for seamless expansion
-- **Modern CSS** - Clean, responsive design with animations
-
-### Privacy & Security
-
-- **No Data Collection** - All processing happens locally
-- **Minimal Permissions** - Only requests necessary permissions
-- **Sandboxed iframes** - Secure content loading
-- **No External Services** - Works completely offline
-
-## 🛠️ Development
+To bypass the final layer of embedding protection, Glimpse uses the `declarativeNetRequest` API to modify network headers. It removes several security headers (`X-Frame-Options`, `Content-Security-Policy`, etc.) from the server's response *before* they reach the browser. This is what allows Glimpse to preview sites with even the strictest security policies. The `declarativeNetRequestFeedback` permission is crucial for this step to work.
 
 ### File Structure
 
 ```
-glimpse-extension/
-├── manifest.json          # Extension configuration
-├── background.js          # Service worker for tab management
-├── content.js            # Main functionality and UI
-├── style.css             # Overlay styling
-├── popup.html            # Extension popup
-├── icons/                # Extension icons
-└── README.md             # This file
+.
+├── manifest.json
+├── background.js
+├── content.js
+├── style.css
+├── popup.html
+├── rules.json
+├── LICENSE
+├── README.md
+└── icons/
+    ├── icon16.png
+    ├── icon48.png
+    └── icon128.png
 ```
-
-### Key Components
-
-- **Glimpse Class** (`content.js`) - Main functionality
-- **Tab Management** (`background.js`) - Hidden tab creation/management
-- **Responsive Design** (`style.css`) - Modern UI with dark mode
-
-### Future Enhancements
-
-- ⚙️ Settings page with customization options
-- 📝 Context menu integration
-- 📚 Glimpse history
-- 🔧 Multi-window support
-
-## ❓ Troubleshooting
-
-### Common Issues
-
-**Preview shows "Preview not available"**
-- Some sites block embedding with X-Frame-Options
-- Click "Open in New Tab" to view the content directly
-
-**Extension not working**
-- Ensure you're using `Ctrl+Click` (or `⌘+Click` on Mac)
-- Check that the link is `http://` or `https://`
-- Try refreshing the page
-
-**Performance issues**
-- Only one preview window is active at a time by design
-- Close unused previews to free up resources
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-**Made with ❤️ for efficient browsing** 
+## 🤝 Contributing
+
+This project is open-source and contributions are welcome. Feel free to open an issue or submit a pull request.
+
+## 📄 License
+
+Glimpse is licensed under the **MIT License**. See the `LICENSE` file for details. 

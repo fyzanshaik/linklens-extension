@@ -1,23 +1,21 @@
-// Background service worker for managing hidden tabs
-let glimpseTabData = new Map(); // Store tab data by origin tab ID
+let glimpseTabData = new Map();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { action, url, originTabId } = message;
-  
+
   switch (action) {
     case 'getCurrentTabId':
-      // Return the sender tab ID
       sendResponse({ tabId: sender.tab?.id });
       break;
-      
+
     case 'createTab':
       createTab(url, sendResponse);
-      return true; // Keep message channel open for async response
-      
+      return true;
+
     case 'closeGlimpse':
       closeHiddenTab(originTabId, sendResponse);
       return true;
-      
+
     default:
       sendResponse({ success: false, error: 'Unknown action' });
   }
@@ -25,15 +23,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function createTab(url, sendResponse) {
   try {
-    // Create a new tab in the background
     const tab = await chrome.tabs.create({
       url: url,
-      active: true // Keep it hidden
+      active: true,
     });
-    
     sendResponse({ success: true, tabId: tab.id });
   } catch (error) {
-    console.error('Error creating hidden tab:', error);
+    console.error('Error creating tab:', error);
     sendResponse({ success: false, error: error.message });
   }
 }
@@ -41,18 +37,14 @@ async function createTab(url, sendResponse) {
 async function expandHiddenTab(originTabId, sendResponse) {
   try {
     const tabData = glimpseTabData.get(originTabId);
-    
+
     if (!tabData) {
       sendResponse({ success: false, error: 'No hidden tab found' });
       return;
     }
-    
-    // Make the hidden tab active
+
     await chrome.tabs.update(tabData.hiddenTabId, { active: true });
-    
-    // Clean up the stored data
     glimpseTabData.delete(originTabId);
-    
     sendResponse({ success: true });
   } catch (error) {
     console.error('Error expanding tab:', error);
@@ -63,15 +55,11 @@ async function expandHiddenTab(originTabId, sendResponse) {
 async function closeHiddenTab(originTabId, sendResponse) {
   try {
     const tabData = glimpseTabData.get(originTabId);
-    
+
     if (tabData) {
-      // Close the hidden tab
       await chrome.tabs.remove(tabData.hiddenTabId);
-      
-      // Clean up the stored data
       glimpseTabData.delete(originTabId);
     }
-    
     sendResponse({ success: true });
   } catch (error) {
     console.error('Error closing hidden tab:', error);
@@ -79,22 +67,17 @@ async function closeHiddenTab(originTabId, sendResponse) {
   }
 }
 
-// Clean up when tabs are closed
 chrome.tabs.onRemoved.addListener((tabId) => {
-  // Remove any stored data for the closed tab
   for (const [originTabId, data] of glimpseTabData.entries()) {
     if (data.hiddenTabId === tabId) {
       glimpseTabData.delete(originTabId);
       break;
     }
   }
-  
-  // Also clean up if the origin tab is closed
+
   if (glimpseTabData.has(tabId)) {
     const data = glimpseTabData.get(tabId);
-    chrome.tabs.remove(data.hiddenTabId).catch(() => {
-      // Tab might already be closed
-    });
+    chrome.tabs.remove(data.hiddenTabId).catch(() => {});
     glimpseTabData.delete(tabId);
   }
 }); 
