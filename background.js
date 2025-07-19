@@ -14,10 +14,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       createTab(url, sendResponse);
       return true; // Keep message channel open for async response
       
-    case 'fetchForGlimpse':
-      fetchForGlimpse(url, sendResponse);
-      return true; // Keep message channel open for async response
-      
     case 'closeGlimpse':
       closeHiddenTab(originTabId, sendResponse);
       return true;
@@ -42,26 +38,6 @@ async function createTab(url, sendResponse) {
   }
 }
 
-async function fetchForGlimpse(url, sendResponse) {
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const html = await response.text();
-    sendResponse({ success: true, html: html });
-
-  } catch (error) {
-    sendResponse({ success: false, error: error.message });
-  }
-}
-
 async function expandHiddenTab(originTabId, sendResponse) {
   try {
     const tabData = glimpseTabData.get(originTabId);
@@ -80,7 +56,7 @@ async function expandHiddenTab(originTabId, sendResponse) {
     sendResponse({ success: true });
   } catch (error) {
     console.error('Error expanding tab:', error);
-    sendResponse({ success: false, error: error.message });
+    sendResponse({ success: false, error: message });
   }
 }
 

@@ -149,19 +149,25 @@ class Glimpse {
     // Create iframe
     const iframe = document.createElement('iframe');
     iframe.className = 'glimpse-iframe';
-    const proxyUrl = chrome.runtime.getURL('proxy.html') + `?url=${encodeURIComponent(url)}`;
-    iframe.src = proxyUrl;
-    console.log(`[Glimpse] Using proxy URL: ${proxyUrl}`);
+    iframe.src = url;
+    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation';
+    iframe.referrerPolicy = 'no-referrer';
 
-    // Handle iframe load events (simplified for proxy)
+    // Handle iframe load events
     iframe.onload = () => {
-      console.log('[Glimpse] Proxy iframe loaded.');
-      // The proxy page will handle its own title, so we don't need to do anything here.
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const pageTitle = iframeDoc.title;
+        if (pageTitle) {
+          title.textContent = pageTitle;
+        }
+      } catch (error) {
+        title.textContent = new URL(url).hostname;
+      }
     };
 
-    iframe.onerror = (error) => {
-      console.error('[Glimpse] Proxy iframe onerror event fired:', error);
-      this.showError(iframeContainer, url, 'The proxy page itself failed to load.');
+    iframe.onerror = () => {
+      this.showError(iframeContainer, url);
     };
 
     iframeContainer.appendChild(iframe);
@@ -179,13 +185,11 @@ class Glimpse {
     this.overlay = backdrop;
   }
   
-  showError(container, url, reason = 'Unknown') {
-    console.error(`[Glimpse] showError called. Reason: ${reason}`);
+  showError(container, url) {
     container.innerHTML = `
       <div class="glimpse-error">
         <h3>Preview not available</h3>
         <p>This site may have security policies that prevent it from being previewed.</p>
-        <p style="font-size: 10px; color: #999; margin-top: 10px; font-family: monospace;">Debug Info: ${reason}</p>
         <button class="glimpse-btn glimpse-open-direct" data-url="${url}">
           Open in New Tab
         </button>
