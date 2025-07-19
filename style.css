@@ -1,17 +1,27 @@
 /* Glimpse Extension Styles */
 
+body.glimpse-active {
+  overflow: hidden;
+}
+
 .glimpse-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* Darker backdrop */
   z-index: 2147483647; /* Maximum z-index */
-  backdrop-filter: blur(4px); /* Increased blur */
+  backdrop-filter: blur(5px); /* Increased blur */
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: glimpse-fade-in 0.2s ease-out;
+}
+
+@keyframes glimpse-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .glimpse-overlay {
@@ -25,8 +35,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transform: scale(0.95);
-  animation: glimpse-appear 0.15s ease-out forwards;
+  transform: scale(0.98);
+  animation: glimpse-appear 0.2s ease-out forwards;
 }
 
 @keyframes glimpse-appear {
@@ -39,9 +49,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  padding: 16px 20px; /* Increased vertical padding for a taller header */
+  background: #f1f3f5; /* Lighter, cleaner gray */
+  border-bottom: 1px solid #dee2e6; /* Softer border color */
   user-select: none;
   flex-shrink: 0;
 }
@@ -62,9 +72,9 @@
 
 .glimpse-title-text {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
+  font-size: 15px; /* Slightly larger font */
+  font-weight: 600; /* Bolder title */
+  color: #212529; /* Darker text */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -89,7 +89,13 @@ class Glimpse {
     // Create backdrop
     const backdrop = document.createElement('div');
     backdrop.className = 'glimpse-backdrop';
-    
+    backdrop.addEventListener('click', (e) => {
+      // If the click is on the backdrop itself, close Glimpse.
+      if (e.target === backdrop) {
+        this.closeGlimpse();
+      }
+    });
+
     // Create main overlay container
     const overlay = document.createElement('div');
     overlay.className = 'glimpse-overlay';
@@ -180,6 +186,7 @@ class Glimpse {
     
     // Add to page
     document.body.appendChild(backdrop);
+    document.body.classList.add('glimpse-active');
     
     // Store reference
     this.overlay = backdrop;
@@ -221,6 +228,7 @@ class Glimpse {
     // Remove overlay from DOM
     this.overlay.remove();
     this.overlay = null;
+    document.body.classList.remove('glimpse-active');
   }
 }
 
