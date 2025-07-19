@@ -2,7 +2,7 @@
 
 Glimpse is a powerful, lightweight Chrome extension that fundamentally improves your browsing efficiency. It allows you to preview any link in a clean, modal overlay without ever leaving your current page. Say goodbye to endless context switching and tab management.
 
-[![Glimpse Preview](https://i.imgur.com/example.gif)](https://chrome.google.com/webstore/detail/glimpse/your-extension-id)
+[![Glimpse Preview](https://jmp.sh/s/EQjgLVpaj6ef0Ze9WL3N)](https://github.com/fyzanshaik/glimpse)
 
 *A brief animation showing Glimpse in action.*
 
@@ -30,7 +30,7 @@ Glimpse will be available on the Chrome Web Store soon.
 
 ### From Source (Developer Mode)
 
-1.  **Download or Clone:** Get the latest version of the code from this repository.
+1.  **Download or Clone:** Get the latest version of the code from this repository: `https://github.com/fyzanshaik/glimpse`
 2.  **Open Chrome Extensions:** Navigate to `chrome://extensions/` in your browser.
 3.  **Enable Developer Mode:** Find the "Developer mode" toggle in the top-right corner and turn it on.
 4.  **Load the Extension:** Click the "Load unpacked" button and select the folder containing the Glimpse source code.
@@ -66,6 +66,7 @@ To bypass the final layer of embedding protection, Glimpse uses the `declarative
 ├── rules.json
 ├── LICENSE
 ├── README.md
+├── .gitignore
 └── icons/
     ├── icon16.png
     ├── icon48.png
