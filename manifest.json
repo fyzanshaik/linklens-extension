@@ -5,8 +5,7 @@
   "description": "Hold Ctrl and click any link to preview it in a floating window.",
   "permissions": [
     "tabs",
-    "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "<all_urls>"
