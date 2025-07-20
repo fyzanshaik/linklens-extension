@@ -1,195 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Glimpse - Quick Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #ffffff;
-            --text-color: #1a1a1a;
-            --muted-text-color: #666666;
-            --accent-color: #007aff;
-            --border-color: #e6e6e6;
-            --card-bg: #f5f5f7;
-            --kbd-bg: #ffffff;
-            --kbd-border: #d1d1d6;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #1c1c1e;
-                --text-color: #f2f2f7;
-                --muted-text-color: #999999;
-                --accent-color: #0a84ff;
-                --border-color: #3a3a3c;
-                --card-bg: #2c2c2e;
-                --kbd-bg: #4d4d4f;
-                --kbd-border: #636366;
-            }
+            --content-bg: #ffffff;
+            --text-color: #1f2937;
+            --muted-text-color: #6b7280;
+            --accent-color: #3b82f6;
+            --border-color: #e5e7eb;
+            --kbd-bg: #f9fafb;
         }
 
         body {
-            width: 320px;
+            min-width: 320px;
             margin: 0;
-            padding: 16px;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-size: 14px;
+            padding: 8px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: 100%;
+            background-color: var(--content-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .main-content {
+            padding: 28px 24px;
+            text-align: center;
         }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            gap: 4px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo-text {
             font-size: 24px;
             font-weight: 700;
-            color: var(--accent-color);
-        }
-        
-        .logo-icon {
-            font-size: 28px;
-            margin-right: 8px;
         }
 
-        .version {
-            font-size: 11px;
-            color: var(--muted-text-color);
-            font-weight: 500;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .card-title {
+        .instructions {
             font-size: 15px;
-            font-weight: 600;
-            margin: 0 0 12px 0;
-        }
-
-        .instructions p {
-            margin: 0 0 12px 0;
-            line-height: 1.5;
+            line-height: 1.6;
             color: var(--muted-text-color);
-        }
-
-        .shortcut {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            padding: 12px;
-            border-radius: 8px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
         }
         
         kbd {
             background-color: var(--kbd-bg);
-            border: 1px solid var(--kbd-border);
+            border: 1px solid var(--border-color);
+            border-bottom-width: 2px;
             padding: 4px 8px;
             border-radius: 6px;
             font-family: 'SF Mono', 'Menlo', 'monospace';
             font-size: 13px;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-            color: var(--text-color);
+            margin: 0 2px;
+            display: inline-block;
+            vertical-align: middle;
         }
 
-        .divider {
-            border: none;
-            height: 1px;
-            background-color: var(--border-color);
-            margin: 20px 0;
-        }
-
-        .features {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .features li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--muted-text-color);
-        }
-        
-        .feature-icon {
-            font-size: 16px;
-            color: var(--accent-color);
-        }
-        
         .footer {
-            text-align: center;
-            font-size: 11px;
-            color: var(--muted-text-color);
-            padding-top: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
             border-top: 1px solid var(--border-color);
+            font-size: 12px;
         }
 
         .footer a {
-            color: var(--accent-color);
+            color: var(--muted-text-color);
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .footer a:hover {
-            text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        .footer .separator {
+            color: var(--border-color);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo"><span class="logo-icon">👁️</span>Glimpse</div>
-            <div class="version">Version 1.0.0</div>
-        </div>
-
-        <div class="card">
-            <h3 class="card-title">How to Use</h3>
-            <div class="instructions">
-                <p>Press & hold <kbd>Ctrl</kbd> or <kbd>⌘</kbd>, then click any link.</p>
+        <div class="main-content">
+            <div class="header">
+                <img src="icons/icon.png" class="logo-icon" alt="Glimpse Logo">
+                <span class="logo-text">Glimpse</span>
             </div>
-            <div class="shortcut">
-                <kbd>Ctrl</kbd> <span>or</span> <kbd>⌘</kbd> <span>+</span> <span>Click</span>
-            </div>
-
-            <hr class="divider">
-
-            <ul class="features">
-                <li><span class="feature-icon">✨</span>Instantly preview links without leaving the page.</li>
-                <li><span class="feature-icon">🚀</span>Seamlessly expand previews to a new tab.</li>
-                <li><span class="feature-icon">ESC</span>Quickly close previews with the Escape key.</li>
-                <li><span class="feature-icon">🛡️</span>Handles blocked or secure content gracefully.</li>
-            </ul>
+            <p class="instructions">
+                Hold <kbd>Ctrl</kbd> or <kbd>⌘</kbd> then click a link to preview it.
+            </p>
         </div>
         
         <div class="footer">
-            Made with ❤️ by <a href="https://github.com/fyzanshaik" target="_blank">Faizan Shaik</a>
-            <span>&nbsp;&nbsp;·&nbsp;&nbsp;</span>
-            <a href="https://github.com/fyzanshaik/glimpse-extension/issues" target="_blank">Report a Bug</a>
+            <a href="https://coff.ee/fyzanshaik" target="_blank">☕️ Support</a>
+            <span class="separator">·</span>
+            <a href="https://github.com/fyzanshaik/glimpse-extension/issues" target="_blank">Report Bug</a>
+            <span class="separator">·</span>
+            <a href="https://github.com/fyzanshaik" target="_blank">By Faizan</a>
         </div>
     </div>
 </body>
