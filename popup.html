@@ -2,85 +2,157 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --muted-text-color: #666666;
+            --accent-color: #007aff;
+            --border-color: #e6e6e6;
+            --card-bg: #f5f5f7;
+            --kbd-bg: #ffffff;
+            --kbd-border: #d1d1d6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1c1c1e;
+                --text-color: #f2f2f7;
+                --muted-text-color: #999999;
+                --accent-color: #0a84ff;
+                --border-color: #3a3a3c;
+                --card-bg: #2c2c2e;
+                --kbd-bg: #4d4d4f;
+                --kbd-border: #636366;
+            }
+        }
+
         body {
-            width: 300px;
-            padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            width: 320px;
             margin: 0;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 8px;
-        }
-        
-        .version {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .instructions {
-            background: #f8f9fa;
             padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-        
-        .instructions h3 {
-            margin: 0 0 12px 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-size: 14px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 8px;
+        }
+
+        .version {
+            font-size: 11px;
+            color: var(--muted-text-color);
+            font-weight: 500;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 15px;
             font-weight: 600;
-            color: #333;
+            margin: 0 0 12px 0;
         }
-        
+
         .instructions p {
-            margin: 0;
-            font-size: 13px;
+            margin: 0 0 12px 0;
             line-height: 1.5;
-            color: #666;
+            color: var(--muted-text-color);
         }
-        
+
         .shortcut {
-            background: #e7f3ff;
-            padding: 8px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        kbd {
+            background-color: var(--kbd-bg);
+            border: 1px solid var(--kbd-border);
+            padding: 4px 8px;
             border-radius: 6px;
-            font-family: monospace;
-            font-size: 12px;
-            text-align: center;
-            margin: 12px 0;
-            border: 1px solid #b3d7ff;
+            font-family: 'SF Mono', 'Menlo', 'monospace';
+            font-size: 13px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            color: var(--text-color);
         }
-        
+
+        .divider {
+            border: none;
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 20px 0;
+        }
+
         .features {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.4;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--muted-text-color);
         }
         
-        .features li {
-            margin-bottom: 4px;
+        .feature-icon {
+            font-size: 16px;
+            color: var(--accent-color);
         }
         
         .footer {
             text-align: center;
             font-size: 11px;
-            color: #999;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
+            color: var(--muted-text-color);
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
         }
 
         .footer a {
-            color: #007bff;
+            color: var(--accent-color);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .footer a:hover {
@@ -89,35 +161,36 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">👁 Glimpse</div>
-        <div class="version">v1.0.0</div>
-    </div>
-    
-    <div class="instructions">
-        <h3>How to use Glimpse</h3>
-        <p>Hold <strong>Ctrl</strong> (or <strong>⌘ Cmd</strong> on Mac) and click any link to preview it in a floating window.</p>
-        
-        <div class="shortcut">
-            Ctrl + Click (⌘ + Click on Mac)
+    <div class="container">
+        <div class="header">
+            <div class="logo"><span class="logo-icon">👁️</span>Glimpse</div>
+            <div class="version">Version 1.0.0</div>
         </div>
-    </div>
-    
-    <div class="instructions">
-        <h3>Features</h3>
-        <ul class="features">
-            <li>🔍 Preview links without leaving the page</li>
-            <li>📱 Draggable and resizable windows</li>
-            <li>⚡ Seamless expand to new tab</li>
-            <li>⌨️ Press Escape to close</li>
-            <li>🛡️ Handles blocked content gracefully</li>
-        </ul>
-    </div>
-    
-    <div class="footer">
-        Made by <a href="https://github.com/fyzanshaik" target="_blank">Faizan Shaik</a>
-        <br>
-        <a href="https://github.com/fyzanshaik/glimpse/issues" target="_blank">Report a Bug</a>
+
+        <div class="card">
+            <h3 class="card-title">How to Use</h3>
+            <div class="instructions">
+                <p>Press & hold <kbd>Ctrl</kbd> or <kbd>⌘</kbd>, then click any link.</p>
+            </div>
+            <div class="shortcut">
+                <kbd>Ctrl</kbd> <span>or</span> <kbd>⌘</kbd> <span>+</span> <span>Click</span>
+            </div>
+
+            <hr class="divider">
+
+            <ul class="features">
+                <li><span class="feature-icon">✨</span>Instantly preview links without leaving the page.</li>
+                <li><span class="feature-icon">🚀</span>Seamlessly expand previews to a new tab.</li>
+                <li><span class="feature-icon">ESC</span>Quickly close previews with the Escape key.</li>
+                <li><span class="feature-icon">🛡️</span>Handles blocked or secure content gracefully.</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            Made with ❤️ by <a href="https://github.com/fyzanshaik" target="_blank">Faizan Shaik</a>
+            <span>&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+            <a href="https://github.com/fyzanshaik/glimpse-extension/issues" target="_blank">Report a Bug</a>
+        </div>
     </div>
 </body>
 </html> 
