@@ -35,3 +35,6 @@ Thumbs.db
 
 # Chrome extension build files
 /_metadata/ 
+
+#DOC
+ProjectDoc.md
