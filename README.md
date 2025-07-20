@@ -52,7 +52,9 @@ Previews are loaded into a sandboxed `<iframe>`. The key to our solution is the 
 
 ### 3. The Network Layer: `declarativeNetRequest`
 
-To bypass the final layer of embedding protection, Glimpse uses the `declarativeNetRequest` API to modify network headers. It removes several security headers (`X-Frame-Options`, `Content-Security-Policy`, etc.) from the server's response *before* they reach the browser. This is what allows Glimpse to preview sites with even the strictest security policies. The `declarativeNetRequestFeedback` permission is crucial for this step to work.
+To bypass the final layer of embedding protection, Glimpse uses the `declarativeNetRequest` API to modify network headers. It removes several security headers (`X-Frame-Options`, `Content-Security-Policy`, etc.) from the server's response *before* they reach the browser. This is what allows Glimpse to preview sites with even the strictest security policies.
+
+Crucially, these modifications are narrowly scoped and only apply to requests loaded within the Glimpse preview frame (`"resourceTypes": ["sub_frame"]`), ensuring that the extension does not interfere with normal browsing.
 
 ### File Structure
 
