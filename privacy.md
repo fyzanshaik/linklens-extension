@@ -18,7 +18,6 @@ Here is a specific breakdown of the data the extension interacts with:
 
 Glimpse requests the following permissions to operate:
 
-*   **`tabs`**: Required to create and manage the preview windows.
 *   **`declarativeNetRequest`**: Required to modify website security headers so they can be previewed.
 *   **`<all_urls>`**: Required for two reasons:
     1.  To allow the content script to listen for your `Ctrl+Click` on any webpage you visit.

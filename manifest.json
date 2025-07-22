@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "Hold Ctrl and click any link to preview it in a floating window.",
   "permissions": [
-    "tabs",
     "declarativeNetRequest"
   ],
   "host_permissions": [
