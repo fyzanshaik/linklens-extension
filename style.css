@@ -114,7 +114,7 @@ body.glimpse-active {
   color: white;
 }
 
-.glimpse-expand:hover {
+.glimpse-reopen:hover {
   background: #007bff;
   color: white;
 }
@@ -179,18 +179,19 @@ body.glimpse-active {
 }
 
 .glimpse-open-direct {
-  padding: 10px 20px !important;
-  width: auto !important;
-  height: auto !important;
-  background: #007bff !important;
-  color: white !important;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
   border-radius: 6px;
-  font-size: 14px !important;
-  font-weight: 500 !important;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
 .glimpse-open-direct:hover {
-  background: #0056b3 !important;
+  background: #0056b3;
 }
 
 @media (prefers-color-scheme: dark) {

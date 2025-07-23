@@ -15,7 +15,7 @@ Glimpse is a powerful, lightweight Chrome extension that fundamentally improves 
 *   **UX-Focused:**
     *   Click anywhere outside the preview or press `Escape` to close it.
     *   The background page is locked from scrolling while a preview is active.
-    *   Seamlessly open the original link in a new tab with the "Expand" button.
+    *   Seamlessly open the original link in a new tab with the "Reopen" button.
 
 ---
 

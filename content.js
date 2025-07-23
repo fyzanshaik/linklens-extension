@@ -99,7 +99,7 @@ class Glimpse {
     controls.className = 'glimpse-controls';
 
     const expandBtn = document.createElement('button');
-    expandBtn.className = 'glimpse-btn glimpse-expand';
+    expandBtn.className = 'glimpse-btn glimpse-reopen';
     expandBtn.innerHTML = '↗';
     expandBtn.title = 'Open in new tab';
     expandBtn.onclick = () => this.expandToNewTab(url);
@@ -159,7 +159,7 @@ class Glimpse {
       <div class="glimpse-error">
         <h3>Preview not available</h3>
         <p>This site may have security policies that prevent it from being previewed.</p>
-        <button class="glimpse-btn glimpse-open-direct" data-url="${url}">
+        <button class="glimpse-open-direct" data-url="${url}">
           Open in New Tab
         </button>
       </div>
