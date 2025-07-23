@@ -159,7 +159,7 @@ class Glimpse {
       <div class="glimpse-error">
         <h3>Preview not available</h3>
         <p>This site may have security policies that prevent it from being previewed.</p>
-        <button class="glimpse-open-direct" data-url="${url}">
+        <button class="glimpse-btn glimpse-open-direct" data-url="${url}">
           Open in New Tab
         </button>
       </div>

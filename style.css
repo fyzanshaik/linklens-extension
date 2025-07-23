@@ -89,8 +89,9 @@ body.glimpse-active {
 }
 
 .glimpse-btn {
-  width: 28px;
   height: 28px;
+  padding: 0 8px;
+  aspect-ratio: 1 / 1;
   border: none;
   border-radius: 6px;
   background: transparent;
@@ -179,7 +180,6 @@ body.glimpse-active {
 }
 
 .glimpse-open-direct {
-  padding: 10px 20px;
   background: #007bff;
   color: white;
   border-radius: 6px;
