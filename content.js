@@ -30,7 +30,7 @@ class Glimpse {
       return;
     }
 
-    const isModifierPressed = event.ctrlKey || event.metaKey;
+    const isModifierPressed = event.altKey && !event.metaKey;
     if (!isModifierPressed || event.button !== 0) {
       return;
     }
