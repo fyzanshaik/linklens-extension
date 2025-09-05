@@ -26,6 +26,20 @@
     "condition": {
       "resourceTypes": [
         "sub_frame"
+      ],
+      "excludedRequestDomains": [
+        "cloudflare.com",
+        "cloudflareinsights.com",
+        "cf-assets.com",
+        "cloudflare-dns.com"
+      ],
+      "excludedInitiatorDomains": [
+        "cloudflare.com"
+      ],
+      "excludedUrlPathContains": [
+        "cdn-cgi",
+        "cf-challenge",
+        "__cf_challenge__"
       ]
     }
   }
