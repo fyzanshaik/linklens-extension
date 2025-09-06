@@ -1,4 +1,4 @@
-class Glimpse {
+class LinkLens {
   constructor() {
     this.overlay = null;
     this.currentTabId = null;
@@ -22,7 +22,7 @@ class Glimpse {
   init() {
     try {
       if (this.isDestroyed) {
-        console.warn('[Glimpse] Cannot initialize destroyed instance');
+        console.warn('[LinkLens] Cannot initialize destroyed instance');
         return;
       }
 
@@ -30,7 +30,7 @@ class Glimpse {
       this.getCurrentTabId();
       this.detectCloudflareChallenge();
 
-      console.log('[Glimpse] Extension initialized successfully');
+      console.log('[LinkLens] Extension initialized successfully');
     } catch (error) {
       this.handleError('Initialization failed', error);
     }
@@ -59,7 +59,7 @@ class Glimpse {
       document.removeEventListener('mousedown', this.handleMouseDown, true);
       document.removeEventListener('keydown', this.handleKeyDown);
     } catch (error) {
-      console.warn('[Glimpse] Error removing event listeners:', error);
+      console.warn('[LinkLens] Error removing event listeners:', error);
     }
   }
 
@@ -72,7 +72,7 @@ class Glimpse {
       this.currentTabId = response?.tabId || Date.now();
     } catch (error) {
       this.currentTabId = Date.now();
-      console.warn('[Glimpse] Failed to get tab ID, using fallback:', error.message);
+      console.warn('[LinkLens] Failed to get tab ID, using fallback:', error.message);
     }
   }
 
@@ -181,16 +181,16 @@ class Glimpse {
                                   (hasChallengeTitle && (hasActiveChallengeElements || hasChallengeMetaTags));
 
       if (this.isCloudflareChallenge && !wasCloudflareChallenge) {
-        console.log('[Glimpse] Active Cloudflare challenge detected - extension disabled for this page');
-        console.log('[Glimpse] Challenge indicators:', {
+        console.log('[LinkLens] Active Cloudflare challenge detected - extension disabled for this page');
+        console.log('[LinkLens] Challenge indicators:', {
           elements: hasActiveChallengeElements,
           text: hasActiveChallengeText,
           url: isChallengeUrl,
           title: hasChallengeTitle
         });
-        this.closeGlimpse(); // Close any existing glimpse
+        this.closeLinkLens(); // Close any existing glimpse
       } else if (!this.isCloudflareChallenge && wasCloudflareChallenge) {
-        console.log('[Glimpse] Cloudflare challenge resolved - extension re-enabled');
+        console.log('[LinkLens] Cloudflare challenge resolved - extension re-enabled');
       }
 
       if (!this.isDestroyed) {
@@ -215,7 +215,7 @@ class Glimpse {
         return;
       }
 
-      if (event.target?.closest?.('.glimpse-overlay')) {
+      if (event.target?.closest?.('.linklens-overlay')) {
         return;
       }
 
@@ -232,7 +232,7 @@ class Glimpse {
       event.preventDefault();
       event.stopPropagation();
 
-      this.createGlimpse(link.href);
+      this.createLinkLens(link.href);
     } catch (error) {
       this.handleError('Mouse down handler failed', error);
     }
@@ -267,17 +267,17 @@ class Glimpse {
     try {
       if (event.key === 'Escape' && this.overlay) {
         event.preventDefault();
-        this.closeGlimpse();
+        this.closeLinkLens();
       }
     } catch (error) {
       this.handleError('Key down handler failed', error);
     }
   }
 
-  async createGlimpse(url) {
+  async createLinkLens(url) {
     try {
       if (this.overlay) {
-        this.closeGlimpse();
+        this.closeLinkLens();
       }
 
       if (!url || typeof url !== 'string') {
@@ -286,7 +286,7 @@ class Glimpse {
 
       await this.createOverlayElements(url);
       
-      console.log('[Glimpse] Created glimpse for:', url);
+      console.log('[LinkLens] Created glimpse for:', url);
     } catch (error) {
       this.handleError('Failed to create glimpse', error, url);
     }
@@ -296,22 +296,22 @@ class Glimpse {
     return new Promise((resolve, reject) => {
       try {
         const backdrop = this.createElement('div', {
-          className: 'glimpse-backdrop',
+          className: 'linklens-backdrop',
           onclick: (e) => {
             if (e.target === backdrop) {
-              this.closeGlimpse();
+              this.closeLinkLens();
             }
           }
         });
 
         const overlay = this.createElement('div', {
-          className: 'glimpse-overlay'
+          className: 'linklens-overlay'
         });
 
         const header = this.createHeader(url);
         
         const iframeContainer = this.createElement('div', {
-          className: 'glimpse-content'
+          className: 'linklens-content'
         });
 
         const iframe = this.createIframe(url, iframeContainer);
@@ -343,7 +343,7 @@ class Glimpse {
             element[key] = value;
           }
         } catch (e) {
-          console.warn(`[Glimpse] Failed to set property ${key}:`, e);
+          console.warn(`[LinkLens] Failed to set property ${key}:`, e);
         }
       });
 
@@ -356,17 +356,17 @@ class Glimpse {
   createHeader(url) {
     try {
       const header = this.createElement('div', {
-        className: 'glimpse-header'
+        className: 'linklens-header'
       });
 
       const titleContainer = this.createElement('div', {
-        className: 'glimpse-title'
+        className: 'linklens-title'
       });
 
       const favicon = this.createFavicon(url);
       
       const title = this.createElement('span', {
-        className: 'glimpse-title-text',
+        className: 'linklens-title-text',
         textContent: 'Loading...'
       });
 
@@ -387,7 +387,7 @@ class Glimpse {
   createFavicon(url) {
     try {
       const favicon = this.createElement('img', {
-        className: 'glimpse-favicon',
+        className: 'linklens-favicon',
         src: `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=16`
       });
 
@@ -401,7 +401,7 @@ class Glimpse {
       return favicon;
     } catch (error) {
       return this.createElement('div', {
-        className: 'glimpse-favicon',
+        className: 'linklens-favicon',
         style: 'display: none;'
       });
     }
@@ -410,21 +410,21 @@ class Glimpse {
   createControls(url) {
     try {
       const controls = this.createElement('div', {
-        className: 'glimpse-controls'
+        className: 'linklens-controls'
       });
 
       const expandBtn = this.createElement('button', {
-        className: 'glimpse-btn glimpse-reopen',
+        className: 'linklens-btn linklens-reopen',
         innerHTML: '⧉',
         title: 'Open in new tab',
         onclick: () => this.expandToNewTab(url)
       });
 
       const closeBtn = this.createElement('button', {
-        className: 'glimpse-btn glimpse-close',
+        className: 'linklens-btn linklens-close',
         innerHTML: '⨯',
         title: 'Close',
-        onclick: () => this.closeGlimpse()
+        onclick: () => this.closeLinkLens()
       });
 
       controls.appendChild(expandBtn);
@@ -439,7 +439,7 @@ class Glimpse {
   createIframe(url, container) {
     try {
       const iframe = this.createElement('iframe', {
-        className: 'glimpse-iframe',
+        className: 'linklens-iframe',
         src: url,
         sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation',
         referrerPolicy: 'no-referrer'
@@ -449,7 +449,7 @@ class Glimpse {
         try {
           this.handleIframeLoad(iframe);
         } catch (error) {
-          console.warn('[Glimpse] Error handling iframe load:', error);
+          console.warn('[LinkLens] Error handling iframe load:', error);
         }
       };
 
@@ -457,7 +457,7 @@ class Glimpse {
         try {
           this.showError(container, url, 'Failed to load page');
         } catch (error) {
-          console.error('[Glimpse] Error showing iframe error:', error);
+          console.error('[LinkLens] Error showing iframe error:', error);
         }
       };
 
@@ -478,7 +478,7 @@ class Glimpse {
 
   handleIframeLoad(iframe) {
     try {
-      const titleElement = this.overlay?.querySelector?.('.glimpse-title-text');
+      const titleElement = this.overlay?.querySelector?.('.linklens-title-text');
       if (!titleElement) return;
 
       try {
@@ -494,29 +494,29 @@ class Glimpse {
         titleElement.textContent = new URL(iframe.src).hostname;
       }
     } catch (error) {
-      console.warn('[Glimpse] Error updating title:', error);
+      console.warn('[LinkLens] Error updating title:', error);
     }
   }
 
   showError(container, url, message = 'Preview not available') {
     try {
       container.innerHTML = `
-        <div class="glimpse-error">
+        <div class="linklens-error">
           <h3>${message}</h3>
           <p>This site may have security policies that prevent it from being previewed.</p>
-          <button class="glimpse-btn glimpse-open-direct" data-url="${encodeURIComponent(url)}">
+          <button class="linklens-btn linklens-open-direct" data-url="${encodeURIComponent(url)}">
             Open in New Tab
           </button>
         </div>
       `;
 
-      const openButton = container.querySelector('.glimpse-open-direct');
+      const openButton = container.querySelector('.linklens-open-direct');
       if (openButton) {
         openButton.onclick = (e) => {
           try {
             const targetUrl = decodeURIComponent(e.target.dataset.url);
             this.expandToNewTab(targetUrl);
-            this.closeGlimpse();
+            this.closeLinkLens();
           } catch (error) {
             this.handleError('Failed to open direct link', error);
           }
@@ -534,7 +534,7 @@ class Glimpse {
       }
 
       document.body.appendChild(element);
-      document.body.classList.add('glimpse-active');
+      document.body.classList.add('linklens-active');
     } catch (error) {
       throw new Error(`Failed to add to DOM: ${error.message}`);
     }
@@ -547,20 +547,20 @@ class Glimpse {
         url: url,
       }, 3000);
       
-      this.closeGlimpse();
+      this.closeLinkLens();
     } catch (error) {
       this.handleError('Failed to create tab', error);
       
       try {
         window.open(url, '_blank', 'noopener,noreferrer');
-        this.closeGlimpse();
+        this.closeLinkLens();
       } catch (fallbackError) {
         this.handleError('Fallback tab creation also failed', fallbackError);
       }
     }
   }
 
-  closeGlimpse() {
+  closeLinkLens() {
     try {
       if (!this.overlay) return;
 
@@ -568,16 +568,16 @@ class Glimpse {
       this.overlay = null;
       
       if (document.body) {
-        document.body.classList.remove('glimpse-active');
+        document.body.classList.remove('linklens-active');
       }
 
-      console.log('[Glimpse] Closed glimpse overlay');
+      console.log('[LinkLens] Closed glimpse overlay');
     } catch (error) {
       this.handleError('Failed to close glimpse', error);
       
       this.overlay = null;
       try {
-        document.body?.classList?.remove('glimpse-active');
+        document.body?.classList?.remove('linklens-active');
       } catch (e) {
       }
     }
@@ -593,15 +593,15 @@ class Glimpse {
       url: window.location.href
     };
 
-    console.error('[Glimpse Error]', errorInfo);
+    console.error('[LinkLens Error]', errorInfo);
 
     if (this.shouldRetry(error) && this.retryCount < this.maxRetries) {
       this.retryCount++;
-      console.log(`[Glimpse] Retrying operation (${this.retryCount}/${this.maxRetries})`);
+      console.log(`[LinkLens] Retrying operation (${this.retryCount}/${this.maxRetries})`);
       
       setTimeout(() => {
         if (context && typeof context === 'string') {
-          this.createGlimpse(context);
+          this.createLinkLens(context);
         }
       }, 1000 * this.retryCount);
     }
@@ -629,11 +629,11 @@ class Glimpse {
 
       this.removeEventListeners();
       
-      this.closeGlimpse();
+      this.closeLinkLens();
       
-      console.log('[Glimpse] Extension destroyed');
+      console.log('[LinkLens] Extension destroyed');
     } catch (error) {
-      console.error('[Glimpse] Error during destruction:', error);
+      console.error('[LinkLens] Error during destruction:', error);
     }
   }
 }
@@ -642,16 +642,16 @@ try {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       try {
-        new Glimpse();
+        new LinkLens();
       } catch (error) {
-        console.error('[Glimpse] Failed to initialize on DOMContentLoaded:', error);
+        console.error('[LinkLens] Failed to initialize on DOMContentLoaded:', error);
       }
     });
   } else {
-    new Glimpse();
+    new LinkLens();
   }
 } catch (error) {
-  console.error('[Glimpse] Critical initialization error:', error);
+  console.error('[LinkLens] Critical initialization error:', error);
 }
 
 if (typeof chrome !== 'undefined' && chrome.runtime) {
@@ -661,7 +661,7 @@ if (typeof chrome !== 'undefined' && chrome.runtime) {
         sendResponse({ status: 'alive' });
       }
     } catch (error) {
-      console.error('[Glimpse] Message handler error:', error);
+      console.error('[LinkLens] Message handler error:', error);
     }
   });
 }

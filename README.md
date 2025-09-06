@@ -1,6 +1,6 @@
-# 👁️ Glimpse
+# 🔍 LinkLens
 
-**Version 1.1.2** - Instant link previews without leaving your page.
+**Version 1.2.0** - Instant link previews without leaving your page.
 
 Hold `Ctrl` + click any link to preview it in a floating window. No more tab switching.
 
@@ -23,7 +23,7 @@ Hold `Ctrl` + click any link to preview it in a floating window. No more tab swi
 Extension is under review for publication.
 
 ### Developer Install
-1. Clone: `git clone https://github.com/fyzanshaik/glimpse-extension.git`
+1. Clone: `git clone https://github.com/fyzanshaik/linklens-extension.git`
 2. Open `chrome://extensions/`
 3. Enable "Developer mode"
 4. Click "Load unpacked" → select folder
@@ -33,7 +33,12 @@ Extension is under review for publication.
 
 ## 📋 Changelog
 
-### v1.1.2 (Latest) - Smart Cloudflare Detection
+### v1.2.0 (Latest) - LinkLens Rebrand
+- **Rebranded**: Complete rebrand from Glimpse to LinkLens
+- **New Icon**: Clean, professional icon with link + lens concept
+- **Updated**: All UI elements, documentation, and branding
+
+### v1.1.2 - Smart Cloudflare Detection
 - **Fixed**: Works on Cloudflare-protected sites normally
 - **Enhanced**: Only disables during active human verification
 - **Improved**: Precision detection of challenge pages
@@ -79,4 +84,4 @@ MIT License - see `LICENSE` file.
 
 ---
 
-**Links**: [GitHub](https://github.com/fyzanshaik/glimpse-extension) • [Issues](https://github.com/fyzanshaik/glimpse-extension/issues) • [Support](https://coff.ee/fyzanshaik)
+**Links**: [GitHub](https://github.com/fyzanshaik/linklens-extension) • [Issues](https://github.com/fyzanshaik/linklens-extension/issues) • [Support](https://coff.ee/fyzanshaik)

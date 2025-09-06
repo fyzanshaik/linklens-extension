@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       createTab(url, sendResponse);
       return true;
 
-    case 'closeGlimpse':
+    case 'closeLinkLens':
       closeHiddenTab(originTabId, sendResponse);
       return true;
 
