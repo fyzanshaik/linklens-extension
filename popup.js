@@ -8,7 +8,8 @@ class LinkLensSettings {
       windowSize: 80,
       autoCloseTimer: 0,
       animations: true,
-      soundEffects: false
+      soundEffects: false,
+      backgroundOpacity: 60
     };
 
     this.currentSettings = { ...this.defaultSettings };
@@ -82,7 +83,7 @@ class LinkLensSettings {
     });
 
     // Toggle switches
-    const toggles = ['macSupport', 'darkMode', 'animations', 'soundEffects'];
+    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects'];
     toggles.forEach(toggleId => {
       const toggle = document.getElementById(toggleId);
       if (toggle) {
@@ -121,6 +122,14 @@ class LinkLensSettings {
       });
     }
 
+    const backgroundOpacitySlider = document.getElementById('backgroundOpacity');
+    if (backgroundOpacitySlider) {
+      backgroundOpacitySlider.addEventListener('input', (e) => {
+        this.currentSettings.backgroundOpacity = parseInt(e.target.value);
+        this.updateSliderValue('backgroundOpacity', e.target.value + '%');
+      });
+    }
+
     // Action buttons
     document.getElementById('saveBtn')?.addEventListener('click', () => {
       this.saveSettings();
@@ -149,7 +158,7 @@ class LinkLensSettings {
   }
 
   updateToggles() {
-    const toggles = ['macSupport', 'darkMode', 'animations', 'soundEffects'];
+    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects'];
     toggles.forEach(toggleId => {
       this.updateToggle(toggleId);
     });
@@ -187,6 +196,12 @@ class LinkLensSettings {
       autoCloseSlider.value = this.currentSettings.autoCloseTimer;
       const value = this.currentSettings.autoCloseTimer == 0 ? 'Off' : this.currentSettings.autoCloseTimer + 's';
       this.updateSliderValue('autoCloseTimer', value);
+    }
+
+    const backgroundOpacitySlider = document.getElementById('backgroundOpacity');
+    if (backgroundOpacitySlider) {
+      backgroundOpacitySlider.value = this.currentSettings.backgroundOpacity;
+      this.updateSliderValue('backgroundOpacity', this.currentSettings.backgroundOpacity + '%');
     }
   }
 

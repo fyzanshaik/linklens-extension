@@ -46,13 +46,18 @@ body.linklens-active {
   color: #e0e0e0;
 }
 
-.linklens-overlay.no-animations {
+.linklens-backdrop.no-animations {
+  animation: none !important;
+  transition: none !important;
+}
+
+.linklens-backdrop.no-animations .linklens-overlay {
   animation: none !important;
   transform: scale(1) !important;
   transition: none !important;
 }
 
-.linklens-overlay.no-animations * {
+.linklens-backdrop.no-animations * {
   animation: none !important;
   transition: none !important;
 }

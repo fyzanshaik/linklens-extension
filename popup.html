@@ -36,9 +36,11 @@
         }
 
         .header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 20px;
+            background: var(--surface-color);
+            padding: 14px 20px;
             text-align: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
             position: relative;
         }
 
@@ -46,8 +48,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 8px;
+            margin-bottom: 4px;
         }
 
         .logo-icon {
@@ -57,23 +59,23 @@
         }
 
         .logo-text {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
-            color: white;
+            color: var(--text-primary);
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
+            color: var(--text-secondary);
+            font-size: 13px;
             font-weight: 400;
         }
 
         .container {
-            padding: 24px 20px;
+            padding: 16px 20px;
         }
 
         .section {
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
 
         .section:last-child {
@@ -81,13 +83,13 @@
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .section-icon {
@@ -96,8 +98,8 @@
 
         .setting-group {
             background: var(--surface-color);
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 12px;
             border: 1px solid var(--border-color);
         }
 
@@ -105,7 +107,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -453,6 +455,17 @@
                 </div>
                 <div class="setting-item">
                     <div class="setting-label">
+                        <div class="setting-title">Apply Theme to Header</div>
+                        <div class="setting-description">Use theme color for preview window header</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="applyThemeToHeader">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
                         <div class="setting-title">Dark Mode</div>
                         <div class="setting-description">Enable dark theme for preview windows</div>
                     </div>
@@ -471,6 +484,18 @@
                         <div class="slider-container">
                             <input type="range" class="slider" id="windowSize" min="60" max="95" value="80">
                             <span class="slider-value" id="windowSizeValue">80%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Background Opacity</div>
+                        <div class="setting-description">Adjust the darkness of the overlay background</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="backgroundOpacity" min="20" max="90" value="60">
+                            <span class="slider-value" id="backgroundOpacityValue">60%</span>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 # 🔍 LinkLens
 
-**Version 1.3.0** - Instant link previews without leaving your page.
+**Version 1.3.1** - Instant link previews without leaving your page.
 
 *Previously known as Glimpse*
 
@@ -35,7 +35,14 @@ Extension is under review for publication.
 
 ## 📋 Changelog
 
-### v1.3.0 (Latest) - Comprehensive Settings Panel
+### v1.3.1 (Latest) - Enhanced UI & Theme Control
+- **Fixed**: Theme color changes now properly apply to preview window header
+- **Fixed**: Animation toggle now works correctly
+- **Added**: Background opacity control for overlay darkness adjustment
+- **Improved**: Cleaner, more compact popup design without gradient header
+- **Enhanced**: Reduced spacing and streamlined layout for better UX
+
+### v1.3.0 - Comprehensive Settings Panel
 - **New**: Complete settings interface with extensive customization options
 - **Added**: Configurable modifier keys (Ctrl/Alt/Shift), theme colors, window sizes
 - **Enhanced**: Auto-close timers, sound effects, dark mode, animation controls

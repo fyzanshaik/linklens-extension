@@ -17,11 +17,13 @@ class LinkLens {
       modifierKey: 'ctrl',
       macSupport: true,
       themeColor: '#667eea',
+      applyThemeToHeader: false,
       darkMode: false,
       windowSize: 80,
       autoCloseTimer: 0,
       animations: true,
-      soundEffects: false
+      soundEffects: false,
+      backgroundOpacity: 60
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -93,6 +95,13 @@ class LinkLens {
     if (message.action === 'settingsUpdated') {
       this.settings = { ...this.settings, ...message.settings };
       console.log('[LinkLens] Settings updated:', this.settings);
+      
+      // Update theme immediately if there's an active overlay
+      if (this.overlay) {
+        const backdrop = this.overlay.parentElement;
+        this.applyThemeSettings(this.overlay, backdrop);
+      }
+      
       sendResponse({ success: true });
     }
   }
@@ -374,8 +383,10 @@ class LinkLens {
       overlay.classList.add('dark-mode');
     }
 
+    this.applyThemeSettings(overlay, backdrop);
+
     if (!this.settings.animations) {
-      overlay.classList.add('no-animations');
+      backdrop.classList.add('no-animations');
     }
 
         const header = this.createHeader(url);
@@ -660,6 +671,63 @@ class LinkLens {
     }
   }
 
+  applyThemeSettings(overlay, backdrop) {
+    try {
+      if (backdrop && backdrop.classList.contains('linklens-backdrop')) {
+        const opacity = this.settings.backgroundOpacity / 100;
+        backdrop.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+      }
+
+      const themeStyleId = 'linklens-theme-style';
+      let existingStyle = document.getElementById(themeStyleId);
+      
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+
+      let themeStyles = `
+        .linklens-overlay {
+          --theme-color: ${this.settings.themeColor};
+        }
+        .linklens-btn:hover {
+          border-color: ${this.settings.themeColor} !important;
+        }
+        .linklens-reopen:hover {
+          background: ${this.settings.themeColor} !important;
+          color: white !important;
+        }
+        .linklens-close:hover {
+          background: ${this.settings.themeColor} !important;
+          color: white !important;
+        }
+      `;
+
+      if (this.settings.applyThemeToHeader) {
+        themeStyles += `
+        .linklens-header {
+          background: linear-gradient(135deg, ${this.settings.themeColor} 0%, ${this.settings.themeColor}cc 100%) !important;
+          border-bottom-color: ${this.settings.themeColor}44 !important;
+        }
+        .linklens-title-text {
+          color: white !important;
+        }
+        .linklens-favicon {
+          filter: brightness(0) invert(1) !important;
+        }
+        `;
+      }
+
+      const style = document.createElement('style');
+      style.id = themeStyleId;
+      style.textContent = themeStyles;
+      
+      document.head.appendChild(style);
+      
+    } catch (error) {
+      console.warn('[LinkLens] Failed to apply theme settings:', error);
+    }
+  }
+
   playSound(type) {
     if (!this.settings.soundEffects) return;
 
@@ -700,6 +768,11 @@ class LinkLens {
 
       if (this.settings.soundEffects) {
         this.playSound('close');
+      }
+
+      const themeStyle = document.getElementById('linklens-theme-style');
+      if (themeStyle) {
+        themeStyle.remove();
       }
 
       this.overlay.remove();
