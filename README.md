@@ -1,6 +1,8 @@
 # 🔍 LinkLens
 
-**Version 1.2.0** - Instant link previews without leaving your page.
+**Version 1.2.1** - Instant link previews without leaving your page.
+
+*Previously known as Glimpse*
 
 Hold `Ctrl` + click any link to preview it in a floating window. No more tab switching.
 
@@ -33,7 +35,12 @@ Extension is under review for publication.
 
 ## 📋 Changelog
 
-### v1.2.0 (Latest) - LinkLens Rebrand
+### v1.2.1 (Latest) - Improved Icon Design
+- **Enhanced**: Much better, more professional icon design
+- **Refined**: Cleaner lens and link concept with better gradients
+- **Polished**: Modern design with subtle depth and highlights
+
+### v1.2.0 - LinkLens Rebrand
 - **Rebranded**: Complete rebrand from Glimpse to LinkLens
 - **New Icon**: Clean, professional icon with link + lens concept
 - **Updated**: All UI elements, documentation, and branding

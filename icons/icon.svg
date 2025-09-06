@@ -1,30 +1,42 @@
 <svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lens-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.7" />
     </linearGradient>
   </defs>
   
-  <!-- Background circle -->
-  <circle cx="64" cy="64" r="60" fill="url(#gradient)" stroke="none"/>
+  <!-- Background circle with subtle shadow -->
+  <circle cx="64" cy="64" r="58" fill="url(#bg-gradient)" stroke="none"/>
   
-  <!-- Link chain symbol -->
-  <g transform="translate(32, 45)">
+  <!-- Main lens circle -->
+  <circle cx="64" cy="64" r="32" fill="none" stroke="url(#lens-gradient)" stroke-width="4" opacity="0.9"/>
+  
+  <!-- Inner lens circle for depth -->
+  <circle cx="64" cy="64" r="24" fill="none" stroke="url(#lens-gradient)" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Link symbol - simplified chain links -->
+  <g transform="translate(64, 64)" opacity="0.8">
     <!-- First link -->
-    <rect x="0" y="8" width="20" height="12" rx="6" ry="6" fill="none" stroke="white" stroke-width="3"/>
+    <ellipse cx="-8" cy="0" rx="6" ry="10" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
     <!-- Second link -->
-    <rect x="12" y="8" width="20" height="12" rx="6" ry="6" fill="none" stroke="white" stroke-width="3"/>
+    <ellipse cx="8" cy="0" rx="6" ry="10" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
   </g>
   
-  <!-- Magnifying glass -->
-  <g transform="translate(70, 70)">
-    <!-- Glass circle -->
-    <circle cx="0" cy="0" r="12" fill="none" stroke="white" stroke-width="3"/>
-    <!-- Handle -->
-    <line x1="8.5" y1="8.5" x2="16" y2="16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <!-- Lens handle -->
+  <g transform="translate(64, 64)">
+    <line x1="22" y1="22" x2="35" y2="35" stroke="url(#lens-gradient)" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+    <line x1="24" y1="20" x2="37" y2="33" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
   </g>
   
-  <!-- Subtle highlight -->
-  <circle cx="50" cy="45" r="8" fill="white" opacity="0.2"/>
+  <!-- Subtle highlight for depth -->
+  <circle cx="52" cy="52" r="6" fill="white" opacity="0.15"/>
+  
+  <!-- Small accent dots for modern touch -->
+  <circle cx="45" cy="83" r="2" fill="white" opacity="0.3"/>
+  <circle cx="83" cy="45" r="1.5" fill="white" opacity="0.4"/>
 </svg>
