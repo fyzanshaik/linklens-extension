@@ -1,216 +1,82 @@
-# 👁️ Glimpse: Instant Link Previews
+# 👁️ Glimpse
 
-**Version 1.1.2** - Production-ready Chrome extension with intelligent Cloudflare handling and enterprise-grade reliability.
+**Version 1.1.2** - Instant link previews without leaving your page.
 
-Glimpse is a powerful, lightweight Chrome extension that fundamentally improves your browsing efficiency. It allows you to preview any link in a clean, modal overlay without ever leaving your current page. Say goodbye to endless context switching and tab management.
-
-[![Glimpse Preview](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3pnanY1aDRienlsOXMxb3RmMHRhdnk3c3FzYmlvZmJ5YWdxOTRzaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CVaJcEMA3mFZ5eMWxF/giphy.gif)](https://github.com/fyzanshaik/glimpse-extension)
+Hold `Ctrl` + click any link to preview it in a floating window. No more tab switching.
 
 ---
 
-## ✨ Core Features
+## ✨ Features
 
-*   **🖱️ Instant Previews:** Hold `Ctrl` (or `Cmd` on Mac) and click any link to instantly open it in a Glimpse window.
-*   **🎨 Ultra-Sleek Design:** Minimal, modern interface with a compact 40px header and 24px buttons.
-*   **🛡️ Smart Cloudflare Handling:** Intelligently detects active challenge pages while working normally on Cloudflare-protected sites.
-*   **🚀 Works Everywhere:** Designed to work on everything from simple blogs to complex, JavaScript-heavy web apps.
-*   **🔐 Secure & Private:** Built with a "privacy-first" philosophy. Minimal permissions, local processing, no data collection.
-*   **⚡ Enterprise-Grade Reliability:** Comprehensive error handling, retry logic, and fallback mechanisms.
-*   **📱 Fully Responsive:** Adaptive button sizing across all screen sizes and zoom levels.
-*   **UX-Focused:**
-    *   Click anywhere outside the preview or press `Escape` to close it.
-    *   The background page is locked from scrolling while a preview is active.
-    *   Seamlessly open the original link in a new tab with the "Open" button.
-
----
-
-## 🆕 What's New in v1.1.2
-
-### 🧠 **Smart Cloudflare Detection**
-- **Precision Targeting**: Only disables during active human verification challenges
-- **Normal Operation**: Works perfectly on Cloudflare-protected sites without challenges
-- **Intelligent Detection**: Recognizes challenge-specific text patterns and UI elements
-- **Performance Optimized**: Reduced polling frequency and more efficient detection algorithms
-
-### 🔧 **Enhanced Compatibility**
-- **DDoS Protection Sites**: Extension now works on sites using Cloudflare for DDoS protection
-- **CDN Integration**: Compatible with Cloudflare CDN and analytics services
-- **Challenge-Specific**: Only blocks actual challenge URLs, not general Cloudflare services
-- **Detailed Logging**: Better debugging information for challenge detection
-
----
-
-## 🆕 Previous Updates (v1.1.1)
-
-### 🎨 **Design Improvements**
-- **Ultra-Sleek Interface**: Redesigned with minimal, modern aesthetics
-- **Compact Header**: Reduced from chunky to sleek 40px height
-- **Micro Buttons**: Perfectly sized 24px × 24px buttons with consistent visual appearance
-- **Glass Morphism**: Clean transparent backgrounds with backdrop blur effects
-- **Responsive Design**: Buttons scale appropriately across all screen sizes (20px-28px)
-
-### 🛡️ **Reliability & Bug Fixes**
-- **Smart Cloudflare Handling**: Intelligent detection that works on protected sites while preventing verification loops
-- **Enterprise Error Handling**: Comprehensive try-catch blocks with retry logic
-- **Memory Management**: Proper cleanup and leak prevention
-- **Timeout Protection**: All async operations have timeout safeguards
-- **Cross-Origin Safety**: Robust handling of iframe restrictions and CORS errors
-- **Network Resilience**: Automatic retries for failed requests with exponential backoff
-
-### 🔧 **Technical Enhancements**
-- **Debounced Events**: Prevents excessive event firing and performance issues
-- **Input Validation**: Comprehensive URL and link validation
-- **Graceful Degradation**: Multiple fallback strategies for every operation
-- **State Management**: Proper instance lifecycle and destruction handling
-- **Performance Optimized**: Reduced DOM manipulation overhead
-
-### 🐛 **Bug Fixes**
-- Fixed button size inconsistency between close and open buttons
-- Resolved Cloudflare human verification infinite loops
-- Fixed memory leaks from event listeners
-- Corrected cross-origin iframe error handling
-- Improved favicon loading with proper fallbacks
+- **🖱️ Instant Previews**: `Ctrl` + click any link
+- **🎨 Sleek Design**: Minimal 40px header, responsive buttons
+- **🛡️ Smart Cloudflare**: Works on protected sites, disables only during challenges
+- **🔐 Privacy First**: No data collection, local processing only
+- **📱 Responsive**: Works on all screen sizes
+- **⚡ Reliable**: Enterprise-grade error handling
 
 ---
 
 ## 🚀 Installation
 
-### Official Version (Coming Soon)
+### Chrome Web Store (Coming Soon)
+Extension is under review for publication.
 
-> **Status:** Glimpse v1.1.1 is currently under review for publication on the Chrome Web Store.
-
-### From Source (For Developers)
-
-1.  **Download or Clone:** Get the code from this repository: `git clone https://github.com/fyzanshaik/glimpse-extension.git`
-2.  **Open Chrome Extensions:** Navigate to `chrome://extensions/` in your browser.
-3.  **Enable Developer Mode:** Turn on the "Developer mode" toggle in the top-right corner.
-4.  **Load the Extension:** Click "Load unpacked" and select the cloned repository folder.
-5.  **Ready to Go!** Glimpse is now active and ready to use.
+### Developer Install
+1. Clone: `git clone https://github.com/fyzanshaik/glimpse-extension.git`
+2. Open `chrome://extensions/`
+3. Enable "Developer mode"
+4. Click "Load unpacked" → select folder
+5. Ready to use!
 
 ---
 
-## 🔧 How It Works: A Technical Deep Dive
+## 📋 Changelog
 
-Glimpse uses a sophisticated, multi-layered approach to provide a seamless and secure preview experience.
+### v1.1.2 (Latest) - Smart Cloudflare Detection
+- **Fixed**: Works on Cloudflare-protected sites normally
+- **Enhanced**: Only disables during active human verification
+- **Improved**: Precision detection of challenge pages
+- **Added**: Detailed challenge detection logging
 
-### 1. Smart Event Handling
+### v1.1.1 - Button Consistency
+- **Fixed**: Button size inconsistency
+- **Improved**: Better Unicode symbols
+- **Enhanced**: Responsive button sizing
 
-Instead of listening for a `click` event, Glimpse listens for `mousedown` with comprehensive error handling. This event fires earlier, allowing the extension to reliably intercept link activation before a website's scripts can interfere. Essential for compatibility with complex, single-page applications.
+### v1.1.0 - Major Redesign
+- **New**: Ultra-sleek minimal interface
+- **Added**: Enterprise-grade error handling
+- **Enhanced**: Memory management & performance
+- **Improved**: Comprehensive input validation
 
-### 2. Secure Sandboxed Previews
+### v1.0.1 - Cloudflare Compatibility
+- **Fixed**: Infinite verification loops
+- **Added**: Cloudflare challenge detection
+- **Enhanced**: Network request exclusions
 
-Previews are loaded into sandboxed `<iframe>` elements with strict security policies (`allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation`). This isolates previewed content from the main page and prevents malicious actions.
-
-### 3. Intelligent Network Layer
-
-Uses `declarativeNetRequest` API to selectively modify security headers like `X-Frame-Options` and `Content-Security-Policy`, but only for `sub_frame` requests. Includes smart exclusions for Cloudflare domains and challenge pages.
-
-### 4. Smart Cloudflare Detection System
-
-Intelligent detection system that identifies active Cloudflare challenge pages while allowing normal operation on protected sites:
-- **Visible Challenge Elements**: Only detects active, visible challenge containers
-- **Precise Text Analysis**: Recognizes specific challenge phrases like "checking your browser before accessing"
-- **Challenge-Specific URLs**: Only blocks actual challenge endpoints, not general CDN services
-- **Title Pattern Matching**: Identifies challenge page titles like "Just a moment..."
-- **Meta Tag Analysis**: Detects challenge-specific metadata and refresh redirects
-
-When an active challenge is detected, the extension temporarily disables itself to prevent interference with human verification, then re-enables once the challenge is resolved.
-
-### 5. Enterprise-Grade Error Handling
-
-- **Timeout Protection**: All operations have configurable timeouts
-- **Retry Logic**: Automatic retries for network failures (3 attempts with exponential backoff)
-- **Graceful Degradation**: Multiple fallback strategies for every critical operation
-- **Memory Management**: Proper cleanup and garbage collection
-- **Input Validation**: Comprehensive URL and DOM element validation
+### v1.0.0 - Initial Release
+- **Core**: Basic link preview functionality
 
 ---
 
-## 🛡️ Privacy & Security
+## 🔒 Privacy
 
-### Permissions & Justification
-
-| Permission                  | Justification                                                                                                                                                                                                                                                                                         |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `declarativeNetRequest`     | Essential for core preview functionality. Used in a narrowly scoped way to allow websites to be embedded in preview frames. Includes smart exclusions for Cloudflare and security-sensitive domains.                                                                                                                                        |
-| `host_permissions: <all_urls>` | Required to: **1)** Inject content script for `Ctrl+Click` detection on any page. **2)** Enable `declarativeNetRequest` for any potential link destination. Without this, preview functionality would be limited to a predefined set of websites. |
-
-### Data Handling Commitment
-
-*   **Zero Data Collection:** Glimpse does not collect, store, or transmit any personal data or browsing history.
-*   **Local Processing:** All logic and data handling happens locally on your machine.
-*   **No Remote Code:** Extension does not fetch or execute remote code, ensuring behavior is fixed and verifiable.
-*   **Transparent Operations:** All network modifications are logged and can be monitored in developer console.
-
-### Security Features
-
-- **Sandboxed Execution**: All previewed content runs in isolated iframes
-- **Header Modification Logging**: All network modifications are logged for transparency
-- **Input Sanitization**: All URLs and user inputs are validated and sanitized
-- **Memory Protection**: Proper cleanup prevents memory leaks and data persistence
-- **Cross-Origin Safety**: Robust handling of cross-origin restrictions
-
----
-
-## 📊 Version History
-
-### v1.1.2 (Latest)
-- **Major**: Smart Cloudflare detection - works on protected sites, only disables during active challenges
-- **Enhanced**: Precision targeting of challenge-specific elements and text patterns
-- **Improved**: Network rule optimization for better compatibility
-- **Added**: Detailed logging for challenge detection debugging
-
-### v1.1.1
-- **Fixed**: Button size inconsistency between close and open buttons
-- **Improved**: Better Unicode symbols for visual consistency
-- **Enhanced**: Responsive button sizing across all screen sizes
-
-### v1.1.0
-- **Major**: Complete UI redesign with sleek, minimal interface
-- **Added**: Enterprise-grade error handling and retry logic
-- **Enhanced**: Comprehensive input validation and safety checks
-- **Improved**: Memory management and performance optimization
-
-### v1.0.3
-- **Enhanced**: Modern glass morphism design with improved buttons
-- **Added**: Responsive button sizing system
-- **Improved**: Dark mode compatibility
-
-### v1.0.2
-- **Fixed**: Button sizing inconsistencies
-- **Added**: Responsive design for different screen sizes
-
-### v1.0.1
-- **Critical Fix**: Cloudflare compatibility - prevents infinite verification loops
-- **Added**: Smart Cloudflare challenge detection system
-- **Enhanced**: Network request exclusions for security domains
-
-### v1.0.0
-- **Initial Release**: Core functionality with basic preview system
+- **Zero Data Collection**: Nothing stored or transmitted
+- **Local Processing**: Everything happens on your device
+- **Minimal Permissions**: Only what's needed for functionality
+- **No Tracking**: No analytics, no remote code
 
 ---
 
 ## 🤝 Contributing
 
-This project is open-source and contributions are welcome. Areas where we'd love help:
-
-- **Testing**: Try the extension on various websites and report issues
-- **UI/UX**: Suggestions for design improvements
-- **Performance**: Optimization ideas and implementations  
-- **Compatibility**: Testing on different browsers and systems
-- **Documentation**: Improvements to guides and explanations
-
-Feel free to open an issue or submit a pull request!
+Issues and PRs welcome! 
 
 ## 📄 License
 
-Glimpse is licensed under the **MIT License**. See the `LICENSE` file for details.
+MIT License - see `LICENSE` file.
 
 ---
 
-## 🔗 Links
-
-- **Repository**: [github.com/fyzanshaik/glimpse-extension](https://github.com/fyzanshaik/glimpse-extension)
-- **Issues**: [Report bugs or request features](https://github.com/fyzanshaik/glimpse-extension/issues)
-- **Support**: [Buy me a coffee](https://coff.ee/fyzanshaik) ☕
-- **Developer**: [Faizan Shaik](https://github.com/fyzanshaik)
+**Links**: [GitHub](https://github.com/fyzanshaik/glimpse-extension) • [Issues](https://github.com/fyzanshaik/glimpse-extension/issues) • [Support](https://coff.ee/fyzanshaik)
