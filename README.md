@@ -1,6 +1,6 @@
 # 🔍 LinkLens
 
-**Version 1.2.1** - Instant link previews without leaving your page.
+**Version 1.3.0** - Instant link previews without leaving your page.
 
 *Previously known as Glimpse*
 
@@ -35,7 +35,13 @@ Extension is under review for publication.
 
 ## 📋 Changelog
 
-### v1.2.1 (Latest) - Improved Icon Design
+### v1.3.0 (Latest) - Comprehensive Settings Panel
+- **New**: Complete settings interface with extensive customization options
+- **Added**: Configurable modifier keys (Ctrl/Alt/Shift), theme colors, window sizes
+- **Enhanced**: Auto-close timers, sound effects, dark mode, animation controls
+- **Improved**: User-friendly popup with save/reset functionality
+
+### v1.2.1 - Improved Icon Design
 - **Enhanced**: Much better, more professional icon design
 - **Refined**: Cleaner lens and link concept with better gradients
 - **Polished**: Modern design with subtle depth and highlights

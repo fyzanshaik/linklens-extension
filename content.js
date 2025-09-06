@@ -11,10 +11,23 @@ class LinkLens {
     this.maxRetries = 3;
     this.debounceTimer = null;
     this.isDestroyed = false;
+    this.autoCloseTimer = null;
+
+    this.settings = {
+      modifierKey: 'ctrl',
+      macSupport: true,
+      themeColor: '#667eea',
+      darkMode: false,
+      windowSize: 80,
+      autoCloseTimer: 0,
+      animations: true,
+      soundEffects: false
+    };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.detectCloudflareChallenge = this.detectCloudflareChallenge.bind(this);
+    this.handleSettingsUpdate = this.handleSettingsUpdate.bind(this);
 
     this.init();
   }
@@ -26,6 +39,7 @@ class LinkLens {
         return;
       }
 
+      this.loadSettings();
       this.addEventListeners();
       this.getCurrentTabId();
       this.detectCloudflareChallenge();
@@ -33,6 +47,25 @@ class LinkLens {
       console.log('[LinkLens] Extension initialized successfully');
     } catch (error) {
       this.handleError('Initialization failed', error);
+    }
+  }
+
+  async loadSettings() {
+    try {
+      const result = await chrome.storage.sync.get('linklensSettings');
+      if (result.linklensSettings) {
+        this.settings = { ...this.settings, ...result.linklensSettings };
+      }
+    } catch (error) {
+      console.warn('[LinkLens] Failed to load settings from sync, trying local:', error);
+      try {
+        const localResult = await chrome.storage.local.get('linklensSettings');
+        if (localResult.linklensSettings) {
+          this.settings = { ...this.settings, ...localResult.linklensSettings };
+        }
+      } catch (localError) {
+        console.warn('[LinkLens] Failed to load settings from local storage:', localError);
+      }
     }
   }
 
@@ -49,8 +82,33 @@ class LinkLens {
       });
 
       window.addEventListener('beforeunload', () => this.destroy());
+
+      chrome.runtime.onMessage.addListener(this.handleSettingsUpdate);
     } catch (error) {
       this.handleError('Failed to add event listeners', error);
+    }
+  }
+
+  handleSettingsUpdate(message, sender, sendResponse) {
+    if (message.action === 'settingsUpdated') {
+      this.settings = { ...this.settings, ...message.settings };
+      console.log('[LinkLens] Settings updated:', this.settings);
+      sendResponse({ success: true });
+    }
+  }
+
+  checkModifierKey(event) {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    
+    switch (this.settings.modifierKey) {
+      case 'ctrl':
+        return isMac && this.settings.macSupport ? event.metaKey : event.ctrlKey;
+      case 'alt':
+        return event.altKey;
+      case 'shift':
+        return event.shiftKey;
+      default:
+        return event.ctrlKey || (isMac && event.metaKey);
     }
   }
 
@@ -219,7 +277,7 @@ class LinkLens {
         return;
       }
 
-      const isModifierPressed = event.ctrlKey || event.metaKey;
+      const isModifierPressed = this.checkModifierKey(event);
       if (!isModifierPressed || event.button !== 0) {
         return;
       }
@@ -304,9 +362,21 @@ class LinkLens {
           }
         });
 
-        const overlay = this.createElement('div', {
-          className: 'linklens-overlay'
-        });
+    const overlay = this.createElement('div', {
+      className: 'linklens-overlay'
+    });
+
+    overlay.style.width = `${this.settings.windowSize}vw`;
+    overlay.style.height = `${Math.min(this.settings.windowSize + 15, 95)}vh`;
+    overlay.style.maxWidth = '1200px';
+
+    if (this.settings.darkMode) {
+      overlay.classList.add('dark-mode');
+    }
+
+    if (!this.settings.animations) {
+      overlay.classList.add('no-animations');
+    }
 
         const header = this.createHeader(url);
         
@@ -321,9 +391,17 @@ class LinkLens {
         overlay.appendChild(iframeContainer);
         backdrop.appendChild(overlay);
 
-        this.addToDOM(backdrop);
-        
-        this.overlay = backdrop;
+    this.addToDOM(backdrop);
+    
+    this.overlay = backdrop;
+
+    if (this.settings.soundEffects) {
+      this.playSound('open');
+    }
+
+    if (this.settings.autoCloseTimer > 0) {
+      this.startAutoCloseTimer();
+    }
         resolve();
       } catch (error) {
         reject(error);
@@ -560,9 +638,69 @@ class LinkLens {
     }
   }
 
+  startAutoCloseTimer() {
+    if (this.autoCloseTimer) {
+      clearTimeout(this.autoCloseTimer);
+    }
+
+    this.autoCloseTimer = setTimeout(() => {
+      this.closeLinkLens();
+    }, this.settings.autoCloseTimer * 1000);
+
+    if (this.overlay) {
+      this.overlay.addEventListener('mouseenter', () => {
+        if (this.autoCloseTimer) {
+          clearTimeout(this.autoCloseTimer);
+        }
+      });
+
+      this.overlay.addEventListener('mouseleave', () => {
+        this.startAutoCloseTimer();
+      });
+    }
+  }
+
+  playSound(type) {
+    if (!this.settings.soundEffects) return;
+
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      if (type === 'open') {
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.1);
+      } else if (type === 'close') {
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+      }
+
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (error) {
+      console.warn('[LinkLens] Failed to play sound:', error);
+    }
+  }
+
   closeLinkLens() {
     try {
       if (!this.overlay) return;
+
+      if (this.autoCloseTimer) {
+        clearTimeout(this.autoCloseTimer);
+        this.autoCloseTimer = null;
+      }
+
+      if (this.settings.soundEffects) {
+        this.playSound('close');
+      }
 
       this.overlay.remove();
       this.overlay = null;

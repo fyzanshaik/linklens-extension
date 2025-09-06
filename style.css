@@ -41,6 +41,22 @@ body.linklens-active {
   animation: linklens-appear 0.2s ease-out forwards;
 }
 
+.linklens-overlay.dark-mode {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+
+.linklens-overlay.no-animations {
+  animation: none !important;
+  transform: scale(1) !important;
+  transition: none !important;
+}
+
+.linklens-overlay.no-animations * {
+  animation: none !important;
+  transition: none !important;
+}
+
 @keyframes linklens-appear {
   to {
     transform: scale(1);

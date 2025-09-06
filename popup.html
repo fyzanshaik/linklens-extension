@@ -2,130 +2,547 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>LinkLens - Quick Preview</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>LinkLens Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
+            --primary-color: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary-color: #764ba2;
             --bg-color: #ffffff;
-            --content-bg: #ffffff;
-            --text-color: #1f2937;
-            --muted-text-color: #6b7280;
-            --accent-color: #3b82f6;
-            --border-color: #e5e7eb;
-            --kbd-bg: #f9fafb;
+            --surface-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-primary: #1a202c;
+            --text-secondary: #718096;
+            --success-color: #48bb78;
+            --danger-color: #f56565;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         body {
-            min-width: 320px;
-            margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 8px;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            background-color: var(--content-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-
-        .main-content {
-            padding: 28px 24px;
-            text-align: center;
+            width: 400px;
+            min-height: 500px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
         }
 
         .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 8px;
         }
 
         .logo-icon {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
         }
 
         .logo-text {
             font-size: 24px;
-            font-weight: 700;
+            font-weight: 600;
+            color: white;
         }
 
-        .instructions {
-            font-size: 15px;
-            line-height: 1.6;
-            color: var(--muted-text-color);
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 400;
         }
-        
-        kbd {
-            background-color: var(--kbd-bg);
+
+        .container {
+            padding: 24px 20px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            font-size: 18px;
+        }
+
+        .setting-group {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 16px;
             border: 1px solid var(--border-color);
-            border-bottom-width: 2px;
-            padding: 4px 8px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-item:first-child {
+            padding-top: 0;
+        }
+
+        .setting-label {
+            flex: 1;
+        }
+
+        .setting-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .setting-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .setting-control {
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        .key-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .key-btn {
+            padding: 6px 12px;
+            border: 2px solid var(--border-color);
             border-radius: 6px;
-            font-family: 'SF Mono', 'Menlo', 'monospace';
-            font-size: 13px;
-            margin: 0 2px;
-            display: inline-block;
-            vertical-align: middle;
+            background: white;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .key-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--surface-color);
+        }
+
+        .key-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .color-option.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-value {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+        }
+
+        .status {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status.show {
+            opacity: 1;
+        }
+
+        .status.success {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .status.error {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(245, 101, 101, 0.2);
         }
 
         .footer {
+            text-align: center;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            background: var(--surface-color);
+        }
+
+        .footer-links {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 16px;
-            padding: 16px 24px;
-            border-top: 1px solid var(--border-color);
-            font-size: 12px;
+            margin-bottom: 8px;
         }
 
-        .footer a {
-            color: var(--muted-text-color);
+        .footer-link {
+            color: var(--text-secondary);
             text-decoration: none;
+            font-size: 12px;
             font-weight: 500;
             transition: color 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
-        .footer a:hover {
-            color: var(--accent-color);
+        .footer-link:hover {
+            color: var(--primary-color);
         }
 
-        .footer .separator {
-            color: var(--border-color);
+        .version {
+            font-size: 11px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-content">
-            <div class="header">
-                <img src="icons/icon.png" class="logo-icon" alt="LinkLens Logo">
-                <span class="logo-text">LinkLens</span>
-            </div>
-            <p class="instructions">
-                Hold <kbd>Ctrl</kbd> or <kbd>⌘</kbd> then click a link to preview it.
-            </p>
+    <div class="header">
+        <div class="logo">
+            <img src="icons/icon.png" class="logo-icon" alt="LinkLens">
+            <span class="logo-text">LinkLens</span>
         </div>
-        
-        <div class="footer">
-            <a href="https://coff.ee/fyzanshaik" target="_blank">☕️ Support</a>
-            <span class="separator">·</span>
-            <a href="https://github.com/fyzanshaik/linklens-extension/issues" target="_blank">Report Bug</a>
-            <span class="separator">·</span>
-            <a href="https://github.com/fyzanshaik" target="_blank">By Faizan</a>
-        </div>
+        <div class="subtitle">Customize your preview experience</div>
     </div>
+
+    <div class="container">
+        <!-- Trigger Settings -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-icon">⌨️</span>
+                Trigger Settings
+            </div>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Modifier Key</div>
+                        <div class="setting-description">Choose which key to hold while clicking links</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="key-selector">
+                            <div class="key-btn" data-key="ctrl">Ctrl</div>
+                            <div class="key-btn" data-key="alt">Alt</div>
+                            <div class="key-btn" data-key="shift">Shift</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Enable on Mac</div>
+                        <div class="setting-description">Use Cmd key instead of Ctrl on macOS</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="macSupport">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-icon">🎨</span>
+                Appearance
+            </div>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Theme Color</div>
+                        <div class="setting-description">Choose your preferred accent color</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="color-picker">
+                            <div class="color-option" data-color="#667eea" style="background: #667eea;"></div>
+                            <div class="color-option" data-color="#f093fb" style="background: #f093fb;"></div>
+                            <div class="color-option" data-color="#4facfe" style="background: #4facfe;"></div>
+                            <div class="color-option" data-color="#43e97b" style="background: #43e97b;"></div>
+                            <div class="color-option" data-color="#fa709a" style="background: #fa709a;"></div>
+                            <div class="color-option" data-color="#ff9a9e" style="background: #ff9a9e;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Dark Mode</div>
+                        <div class="setting-description">Enable dark theme for preview windows</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="darkMode">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Window Size</div>
+                        <div class="setting-description">Default size for preview windows</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="windowSize" min="60" max="95" value="80">
+                            <span class="slider-value" id="windowSizeValue">80%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Behavior Settings -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-icon">⚙️</span>
+                Behavior
+            </div>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Auto-close Timer</div>
+                        <div class="setting-description">Automatically close previews after inactivity</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="autoCloseTimer" min="0" max="30" value="0">
+                            <span class="slider-value" id="autoCloseValue">Off</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Show Animations</div>
+                        <div class="setting-description">Enable smooth transitions and animations</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="animations">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Sound Effects</div>
+                        <div class="setting-description">Play subtle sounds for interactions</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="soundEffects">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn btn-secondary" id="resetBtn">
+                🔄 Reset to Default
+            </button>
+            <button class="btn btn-primary" id="saveBtn">
+                💾 Save Settings
+            </button>
+        </div>
+
+        <div class="status" id="status"></div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="https://github.com/fyzanshaik/linklens-extension" class="footer-link" target="_blank">GitHub</a>
+            <a href="https://github.com/fyzanshaik/linklens-extension/issues" class="footer-link" target="_blank">Support</a>
+            <a href="https://coff.ee/fyzanshaik" class="footer-link" target="_blank">☕ Donate</a>
+        </div>
+        <div class="version">LinkLens v1.2.1</div>
+    </div>
+
+    <script src="popup.js"></script>
 </body>
-</html> 
+</html>
