@@ -27,19 +27,11 @@
       "resourceTypes": [
         "sub_frame"
       ],
-      "excludedRequestDomains": [
-        "cloudflare.com",
-        "cloudflareinsights.com",
-        "cf-assets.com",
-        "cloudflare-dns.com"
-      ],
-      "excludedInitiatorDomains": [
-        "cloudflare.com"
-      ],
       "excludedUrlPathContains": [
-        "cdn-cgi",
+        "cdn-cgi/challenge-platform",
         "cf-challenge",
-        "__cf_challenge__"
+        "__cf_challenge__",
+        "__cf_chl_"
       ]
     }
   }

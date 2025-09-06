@@ -12,7 +12,6 @@ class Glimpse {
     this.debounceTimer = null;
     this.isDestroyed = false;
 
-    // Bind methods to preserve context
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.detectCloudflareChallenge = this.detectCloudflareChallenge.bind(this);
@@ -22,13 +21,11 @@ class Glimpse {
 
   init() {
     try {
-      // Check if already initialized
       if (this.isDestroyed) {
         console.warn('[Glimpse] Cannot initialize destroyed instance');
         return;
       }
 
-      // Add event listeners with error handling
       this.addEventListeners();
       this.getCurrentTabId();
       this.detectCloudflareChallenge();
@@ -41,7 +38,6 @@ class Glimpse {
 
   addEventListeners() {
     try {
-      // Remove existing listeners to prevent duplicates
       this.removeEventListeners();
 
       document.addEventListener('mousedown', this.handleMouseDown, { 
@@ -52,7 +48,6 @@ class Glimpse {
         passive: false 
       });
 
-      // Handle page unload
       window.addEventListener('beforeunload', () => this.destroy());
     } catch (error) {
       this.handleError('Failed to add event listeners', error);
@@ -105,7 +100,6 @@ class Glimpse {
 
   detectCloudflareChallenge() {
     try {
-      // Debounce detection to avoid excessive checks
       if (this.debounceTimer) {
         clearTimeout(this.debounceTimer);
       }
@@ -120,70 +114,87 @@ class Glimpse {
 
   performCloudflareDetection() {
     try {
-      const cloudflareSelectors = [
+      const activeChallengeSelectors = [
         '.cf-challenge-container',
-        '.cf-wrapper',
         '.cf-im-under-attack',
         '#cf-challenge-stage',
-        '[data-ray]',
         '.cf-browser-verification',
         '.cf-checking-browser',
         '#challenge-stage',
         '#challenge-form',
-        '.cf-challenge-running'
+        '.cf-challenge-running',
+        '.cf-challenge-form',
+        '.cf-turnstile',
+        '.cf-challenge-body'
       ];
 
-      // Check for Cloudflare-specific elements
-      const hasCloudflareElements = cloudflareSelectors.some(selector => {
+      const hasActiveChallengeElements = activeChallengeSelectors.some(selector => {
         try {
-          return document.querySelector(selector);
+          const element = document.querySelector(selector);
+          return element && element.offsetParent !== null;
         } catch (e) {
           return false;
         }
       });
 
-      // Check for Cloudflare-specific text content
       const bodyText = document.body?.textContent?.toLowerCase() || '';
-      const cloudflareTextIndicators = [
-        'checking your browser',
-        'cloudflare',
-        'ddos protection',
-        'security check',
-        'browser verification',
-        'ray id',
+      const activeChallengeTextIndicators = [
+        'checking your browser before accessing',
         'please wait while we check your browser',
-        'verify you are human'
+        'verify you are human',
+        'browser verification in progress',
+        'completing the challenge below',
+        'please stand by, while we are checking your browser',
+        'this process is automatic',
+        'you will be redirected once the validation is complete'
       ];
 
-      const hasCloudflareText = cloudflareTextIndicators.some(text => 
+      const hasActiveChallengeText = activeChallengeTextIndicators.some(text => 
         bodyText.includes(text)
       );
 
-      // Check for Cloudflare-specific meta tags or scripts
-      const hasCloudflareScripts = this.safeQuerySelector('script[src*="cloudflare"]') ||
-                                   this.safeQuerySelector('meta[name="cf-2fa-verify"]') ||
-                                   this.safeQuerySelector('meta[content*="cloudflare"]') ||
-                                   this.safeQuerySelector('script[src*="cf-assets"]');
+      const isChallengeUrl = window.location.pathname.includes('cdn-cgi/challenge-platform') ||
+                            window.location.search.includes('__cf_chl_') ||
+                            window.location.search.includes('cf_challenge') ||
+                            window.location.pathname.includes('__cf_challenge__');
 
-      // Check URL patterns
-      const isCloudflareUrl = window.location.hostname.includes('cloudflare') ||
-                             window.location.pathname.includes('cdn-cgi') ||
-                             window.location.search.includes('__cf_chl_');
+      const pageTitle = document.title?.toLowerCase() || '';
+      const challengeTitleIndicators = [
+        'just a moment',
+        'checking your browser',
+        'please wait',
+        'security check'
+      ];
+
+      const hasChallengeTitle = challengeTitleIndicators.some(title => 
+        pageTitle.includes(title) && pageTitle.length < 100 // Avoid false positives on long titles
+      );
+
+      const hasChallengeMetaTags = this.safeQuerySelector('meta[name="cf-2fa-verify"]') ||
+                                   this.safeQuerySelector('meta[http-equiv="refresh"][content*="url=/cdn-cgi/"]') ||
+                                   this.safeQuerySelector('meta[name="robots"][content="noindex, nofollow"]') && hasChallengeTitle;
 
       const wasCloudflareChallenge = this.isCloudflareChallenge;
-      this.isCloudflareChallenge = hasCloudflareElements || hasCloudflareText || 
-                                  hasCloudflareScripts || isCloudflareUrl;
+      this.isCloudflareChallenge = hasActiveChallengeElements || 
+                                  hasActiveChallengeText || 
+                                  isChallengeUrl || 
+                                  (hasChallengeTitle && (hasActiveChallengeElements || hasChallengeMetaTags));
 
       if (this.isCloudflareChallenge && !wasCloudflareChallenge) {
-        console.log('[Glimpse] Cloudflare challenge detected - extension disabled for this page');
+        console.log('[Glimpse] Active Cloudflare challenge detected - extension disabled for this page');
+        console.log('[Glimpse] Challenge indicators:', {
+          elements: hasActiveChallengeElements,
+          text: hasActiveChallengeText,
+          url: isChallengeUrl,
+          title: hasChallengeTitle
+        });
         this.closeGlimpse(); // Close any existing glimpse
       } else if (!this.isCloudflareChallenge && wasCloudflareChallenge) {
         console.log('[Glimpse] Cloudflare challenge resolved - extension re-enabled');
       }
 
-      // Re-check periodically for dynamic challenges
       if (!this.isDestroyed) {
-        setTimeout(() => this.detectCloudflareChallenge(), 3000);
+        setTimeout(() => this.detectCloudflareChallenge(), 5000);
       }
     } catch (error) {
       this.handleError('Cloudflare detection check failed', error);
@@ -200,33 +211,27 @@ class Glimpse {
 
   handleMouseDown(event) {
     try {
-      // Skip if destroyed or Cloudflare challenge detected
       if (this.isDestroyed || this.isCloudflareChallenge) {
         return;
       }
 
-      // Skip if clicking on our overlay
       if (event.target?.closest?.('.glimpse-overlay')) {
         return;
       }
 
-      // Check for modifier key
       const isModifierPressed = event.ctrlKey || event.metaKey;
       if (!isModifierPressed || event.button !== 0) {
         return;
       }
 
-      // Find the closest link
       const link = event.target?.closest?.('a');
       if (!this.isValidLink(link)) {
         return;
       }
 
-      // Prevent default behavior
       event.preventDefault();
       event.stopPropagation();
 
-      // Create glimpse with error handling
       this.createGlimpse(link.href);
     } catch (error) {
       this.handleError('Mouse down handler failed', error);
@@ -239,17 +244,14 @@ class Glimpse {
         return false;
       }
 
-      // Check for valid HTTP/HTTPS URLs
       if (!link.href.startsWith('http://') && !link.href.startsWith('https://')) {
         return false;
       }
 
-      // Avoid self-references
       if (link.href === window.location.href) {
         return false;
       }
 
-      // Check for valid URL format
       try {
         new URL(link.href);
         return true;
@@ -274,17 +276,14 @@ class Glimpse {
 
   async createGlimpse(url) {
     try {
-      // Close existing glimpse
       if (this.overlay) {
         this.closeGlimpse();
       }
 
-      // Validate URL again
       if (!url || typeof url !== 'string') {
         throw new Error('Invalid URL provided');
       }
 
-      // Create overlay elements with error handling
       await this.createOverlayElements(url);
       
       console.log('[Glimpse] Created glimpse for:', url);
@@ -296,7 +295,6 @@ class Glimpse {
   createOverlayElements(url) {
     return new Promise((resolve, reject) => {
       try {
-        // Create backdrop
         const backdrop = this.createElement('div', {
           className: 'glimpse-backdrop',
           onclick: (e) => {
@@ -306,29 +304,23 @@ class Glimpse {
           }
         });
 
-        // Create overlay container
         const overlay = this.createElement('div', {
           className: 'glimpse-overlay'
         });
 
-        // Create header
         const header = this.createHeader(url);
         
-        // Create content container
         const iframeContainer = this.createElement('div', {
           className: 'glimpse-content'
         });
 
-        // Create iframe with comprehensive error handling
         const iframe = this.createIframe(url, iframeContainer);
         iframeContainer.appendChild(iframe);
 
-        // Assemble the overlay
         overlay.appendChild(header);
         overlay.appendChild(iframeContainer);
         backdrop.appendChild(overlay);
 
-        // Add to DOM with error handling
         this.addToDOM(backdrop);
         
         this.overlay = backdrop;
@@ -367,15 +359,12 @@ class Glimpse {
         className: 'glimpse-header'
       });
 
-      // Title container
       const titleContainer = this.createElement('div', {
         className: 'glimpse-title'
       });
 
-      // Favicon with error handling
       const favicon = this.createFavicon(url);
       
-      // Title text
       const title = this.createElement('span', {
         className: 'glimpse-title-text',
         textContent: 'Loading...'
@@ -384,7 +373,6 @@ class Glimpse {
       titleContainer.appendChild(favicon);
       titleContainer.appendChild(title);
 
-      // Controls
       const controls = this.createControls(url);
 
       header.appendChild(titleContainer);
@@ -407,13 +395,11 @@ class Glimpse {
         try {
           favicon.style.display = 'none';
         } catch (e) {
-          // Ignore
         }
       };
 
       return favicon;
     } catch (error) {
-      // Return a placeholder div if favicon creation fails
       return this.createElement('div', {
         className: 'glimpse-favicon',
         style: 'display: none;'
@@ -427,7 +413,6 @@ class Glimpse {
         className: 'glimpse-controls'
       });
 
-      // Expand button
       const expandBtn = this.createElement('button', {
         className: 'glimpse-btn glimpse-reopen',
         innerHTML: '⧉',
@@ -435,7 +420,6 @@ class Glimpse {
         onclick: () => this.expandToNewTab(url)
       });
 
-      // Close button
       const closeBtn = this.createElement('button', {
         className: 'glimpse-btn glimpse-close',
         innerHTML: '⨯',
@@ -461,7 +445,6 @@ class Glimpse {
         referrerPolicy: 'no-referrer'
       });
 
-      // Handle successful load
       iframe.onload = () => {
         try {
           this.handleIframeLoad(iframe);
@@ -470,7 +453,6 @@ class Glimpse {
         }
       };
 
-      // Handle errors
       iframe.onerror = () => {
         try {
           this.showError(container, url, 'Failed to load page');
@@ -479,14 +461,12 @@ class Glimpse {
         }
       };
 
-      // Timeout fallback
       setTimeout(() => {
         try {
           if (!iframe.contentDocument && !iframe.contentWindow) {
             this.showError(container, url, 'Page load timeout');
           }
         } catch (error) {
-          // Ignore - likely a cross-origin error which is expected
         }
       }, 10000);
 
@@ -511,7 +491,6 @@ class Glimpse {
           titleElement.textContent = new URL(iframe.src).hostname;
         }
       } catch (crossOriginError) {
-        // Expected for cross-origin iframes
         titleElement.textContent = new URL(iframe.src).hostname;
       }
     } catch (error) {
@@ -572,7 +551,6 @@ class Glimpse {
     } catch (error) {
       this.handleError('Failed to create tab', error);
       
-      // Fallback: use window.open
       try {
         window.open(url, '_blank', 'noopener,noreferrer');
         this.closeGlimpse();
@@ -586,11 +564,9 @@ class Glimpse {
     try {
       if (!this.overlay) return;
 
-      // Remove from DOM
       this.overlay.remove();
       this.overlay = null;
       
-      // Remove body class
       if (document.body) {
         document.body.classList.remove('glimpse-active');
       }
@@ -599,12 +575,10 @@ class Glimpse {
     } catch (error) {
       this.handleError('Failed to close glimpse', error);
       
-      // Force cleanup
       this.overlay = null;
       try {
         document.body?.classList?.remove('glimpse-active');
       } catch (e) {
-        // Ignore
       }
     }
   }
@@ -621,7 +595,6 @@ class Glimpse {
 
     console.error('[Glimpse Error]', errorInfo);
 
-    // Retry logic for certain errors
     if (this.shouldRetry(error) && this.retryCount < this.maxRetries) {
       this.retryCount++;
       console.log(`[Glimpse] Retrying operation (${this.retryCount}/${this.maxRetries})`);
@@ -650,15 +623,12 @@ class Glimpse {
     try {
       this.isDestroyed = true;
       
-      // Clear timers
       if (this.debounceTimer) {
         clearTimeout(this.debounceTimer);
       }
 
-      // Remove event listeners
       this.removeEventListeners();
       
-      // Close any open glimpse
       this.closeGlimpse();
       
       console.log('[Glimpse] Extension destroyed');
@@ -668,7 +638,6 @@ class Glimpse {
   }
 }
 
-// Initialize with comprehensive error handling
 try {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -685,7 +654,6 @@ try {
   console.error('[Glimpse] Critical initialization error:', error);
 }
 
-// Handle extension updates/reloads
 if (typeof chrome !== 'undefined' && chrome.runtime) {
   chrome.runtime.onMessage?.addListener?.((message, sender, sendResponse) => {
     try {

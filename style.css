@@ -132,7 +132,6 @@ body.glimpse-active {
   opacity: 1;
 }
 
-/* Ensure perfect visual consistency */
 .glimpse-close,
 .glimpse-reopen {
   font-size: 16px;
@@ -256,7 +255,6 @@ body.glimpse-active {
   }
 }
 
-/* Responsive button sizing */
 @media (max-width: 768px) {
   .glimpse-btn,
   .glimpse-close,

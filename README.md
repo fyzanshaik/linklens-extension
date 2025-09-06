@@ -1,6 +1,6 @@
 # 👁️ Glimpse: Instant Link Previews
 
-**Version 1.1.1** - Production-ready Chrome extension with enterprise-grade reliability and sleek design.
+**Version 1.1.2** - Production-ready Chrome extension with intelligent Cloudflare handling and enterprise-grade reliability.
 
 Glimpse is a powerful, lightweight Chrome extension that fundamentally improves your browsing efficiency. It allows you to preview any link in a clean, modal overlay without ever leaving your current page. Say goodbye to endless context switching and tab management.
 
@@ -12,7 +12,7 @@ Glimpse is a powerful, lightweight Chrome extension that fundamentally improves 
 
 *   **🖱️ Instant Previews:** Hold `Ctrl` (or `Cmd` on Mac) and click any link to instantly open it in a Glimpse window.
 *   **🎨 Ultra-Sleek Design:** Minimal, modern interface with a compact 40px header and 24px buttons.
-*   **🛡️ Cloudflare Compatible:** Automatically detects and disables on Cloudflare challenge pages to prevent verification loops.
+*   **🛡️ Smart Cloudflare Handling:** Intelligently detects active challenge pages while working normally on Cloudflare-protected sites.
 *   **🚀 Works Everywhere:** Designed to work on everything from simple blogs to complex, JavaScript-heavy web apps.
 *   **🔐 Secure & Private:** Built with a "privacy-first" philosophy. Minimal permissions, local processing, no data collection.
 *   **⚡ Enterprise-Grade Reliability:** Comprehensive error handling, retry logic, and fallback mechanisms.
@@ -24,7 +24,23 @@ Glimpse is a powerful, lightweight Chrome extension that fundamentally improves 
 
 ---
 
-## 🆕 What's New in v1.1.1
+## 🆕 What's New in v1.1.2
+
+### 🧠 **Smart Cloudflare Detection**
+- **Precision Targeting**: Only disables during active human verification challenges
+- **Normal Operation**: Works perfectly on Cloudflare-protected sites without challenges
+- **Intelligent Detection**: Recognizes challenge-specific text patterns and UI elements
+- **Performance Optimized**: Reduced polling frequency and more efficient detection algorithms
+
+### 🔧 **Enhanced Compatibility**
+- **DDoS Protection Sites**: Extension now works on sites using Cloudflare for DDoS protection
+- **CDN Integration**: Compatible with Cloudflare CDN and analytics services
+- **Challenge-Specific**: Only blocks actual challenge URLs, not general Cloudflare services
+- **Detailed Logging**: Better debugging information for challenge detection
+
+---
+
+## 🆕 Previous Updates (v1.1.1)
 
 ### 🎨 **Design Improvements**
 - **Ultra-Sleek Interface**: Redesigned with minimal, modern aesthetics
@@ -34,7 +50,7 @@ Glimpse is a powerful, lightweight Chrome extension that fundamentally improves 
 - **Responsive Design**: Buttons scale appropriately across all screen sizes (20px-28px)
 
 ### 🛡️ **Reliability & Bug Fixes**
-- **Cloudflare Compatibility**: Fixed infinite verification loops on Cloudflare-protected sites
+- **Smart Cloudflare Handling**: Intelligent detection that works on protected sites while preventing verification loops
 - **Enterprise Error Handling**: Comprehensive try-catch blocks with retry logic
 - **Memory Management**: Proper cleanup and leak prevention
 - **Timeout Protection**: All async operations have timeout safeguards
@@ -89,15 +105,16 @@ Previews are loaded into sandboxed `<iframe>` elements with strict security poli
 
 Uses `declarativeNetRequest` API to selectively modify security headers like `X-Frame-Options` and `Content-Security-Policy`, but only for `sub_frame` requests. Includes smart exclusions for Cloudflare domains and challenge pages.
 
-### 4. Cloudflare Detection System
+### 4. Smart Cloudflare Detection System
 
-Advanced detection system that identifies Cloudflare challenge pages using multiple indicators:
-- DOM elements (`.cf-challenge-container`, `#cf-challenge-stage`, etc.)
-- Text content analysis ("checking your browser", "security check", etc.)  
-- Script and meta tag detection
-- URL pattern matching (`cdn-cgi`, `__cf_chl_`, etc.)
+Intelligent detection system that identifies active Cloudflare challenge pages while allowing normal operation on protected sites:
+- **Visible Challenge Elements**: Only detects active, visible challenge containers
+- **Precise Text Analysis**: Recognizes specific challenge phrases like "checking your browser before accessing"
+- **Challenge-Specific URLs**: Only blocks actual challenge endpoints, not general CDN services
+- **Title Pattern Matching**: Identifies challenge page titles like "Just a moment..."
+- **Meta Tag Analysis**: Detects challenge-specific metadata and refresh redirects
 
-When detected, the extension automatically disables itself to prevent interference with human verification.
+When an active challenge is detected, the extension temporarily disables itself to prevent interference with human verification, then re-enables once the challenge is resolved.
 
 ### 5. Enterprise-Grade Error Handling
 
@@ -137,7 +154,13 @@ When detected, the extension automatically disables itself to prevent interferen
 
 ## 📊 Version History
 
-### v1.1.1 (Latest)
+### v1.1.2 (Latest)
+- **Major**: Smart Cloudflare detection - works on protected sites, only disables during active challenges
+- **Enhanced**: Precision targeting of challenge-specific elements and text patterns
+- **Improved**: Network rule optimization for better compatibility
+- **Added**: Detailed logging for challenge detection debugging
+
+### v1.1.1
 - **Fixed**: Button size inconsistency between close and open buttons
 - **Improved**: Better Unicode symbols for visual consistency
 - **Enhanced**: Responsive button sizing across all screen sizes
