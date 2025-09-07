@@ -1,3 +1,349 @@
+class LinkPreloadCache {
+  constructor(maxSize = 50 * 1024 * 1024, ttl = 5 * 60 * 1000) {
+    this.cache = new Map();
+    this.maxSize = maxSize;
+    this.ttl = ttl;
+    this.currentSize = 0;
+    this.cleanupTimer = null;
+    this.startCleanupTimer();
+  }
+
+  set(url, content, size) {
+    try {
+      // Remove existing entry if it exists
+      if (this.cache.has(url)) {
+        this.currentSize -= this.cache.get(url).size;
+      }
+
+      // Check if we need to make space
+      while (this.currentSize + size > this.maxSize && this.cache.size > 0) {
+        this.evictLRU();
+      }
+
+      // Don't cache if single item is too large
+      if (size > this.maxSize * 0.5) {
+        console.warn('[LinkLens Cache] Item too large to cache:', url, size);
+        return false;
+      }
+
+      const entry = {
+        content,
+        size,
+        timestamp: Date.now(),
+        lastAccessed: Date.now()
+      };
+
+      this.cache.set(url, entry);
+      this.currentSize += size;
+      
+      console.log(`[LinkLens Cache] Cached ${url} (${Math.round(size/1024)}KB). Total: ${Math.round(this.currentSize/1024)}KB`);
+      return true;
+    } catch (error) {
+      console.error('[LinkLens Cache] Error caching item:', error);
+      return false;
+    }
+  }
+
+  get(url) {
+    const entry = this.cache.get(url);
+    if (!entry) return null;
+
+    // Check if expired
+    if (Date.now() - entry.timestamp > this.ttl) {
+      this.delete(url);
+      return null;
+    }
+
+    // Update last accessed time
+    entry.lastAccessed = Date.now();
+    return entry.content;
+  }
+
+  delete(url) {
+    const entry = this.cache.get(url);
+    if (entry) {
+      this.currentSize -= entry.size;
+      this.cache.delete(url);
+      console.log(`[LinkLens Cache] Removed ${url}. Total: ${Math.round(this.currentSize/1024)}KB`);
+    }
+  }
+
+  evictLRU() {
+    let oldestUrl = null;
+    let oldestTime = Infinity;
+
+    for (const [url, entry] of this.cache.entries()) {
+      if (entry.lastAccessed < oldestTime) {
+        oldestTime = entry.lastAccessed;
+        oldestUrl = url;
+      }
+    }
+
+    if (oldestUrl) {
+      this.delete(oldestUrl);
+    }
+  }
+
+  clear() {
+    this.cache.clear();
+    this.currentSize = 0;
+    console.log('[LinkLens Cache] Cache cleared');
+  }
+
+  startCleanupTimer() {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+    }
+
+    this.cleanupTimer = setInterval(() => {
+      this.cleanup();
+    }, 60000); // Cleanup every minute
+  }
+
+  cleanup() {
+    const now = Date.now();
+    const expiredUrls = [];
+
+    for (const [url, entry] of this.cache.entries()) {
+      if (now - entry.timestamp > this.ttl) {
+        expiredUrls.push(url);
+      }
+    }
+
+    expiredUrls.forEach(url => this.delete(url));
+    
+    if (expiredUrls.length > 0) {
+      console.log(`[LinkLens Cache] Cleaned up ${expiredUrls.length} expired items`);
+    }
+  }
+
+  getStats() {
+    return {
+      size: this.cache.size,
+      totalSize: this.currentSize,
+      maxSize: this.maxSize,
+      utilizationPercent: Math.round((this.currentSize / this.maxSize) * 100)
+    };
+  }
+
+  destroy() {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+    }
+    this.clear();
+  }
+}
+
+class LinkPreloader {
+  constructor(linkLens) {
+    this.linkLens = linkLens;
+    this.cache = null;
+    this.discoveredLinks = [];
+    this.preloadQueue = [];
+    this.activePreloads = new Set();
+    this.maxConcurrentPreloads = 2;
+    this.isPreloading = false;
+    this.preloadTimer = null;
+  }
+
+  initialize(settings) {
+    if (!settings.enablePreloading) {
+      this.destroy();
+      return;
+    }
+
+    // Initialize cache with user settings
+    const maxSize = settings.cacheSizeLimit * 1024 * 1024; // Convert MB to bytes
+    this.cache = new LinkPreloadCache(maxSize);
+
+    // Start link discovery and preloading
+    this.discoverLinks(settings);
+    this.startPreloading(settings);
+  }
+
+  discoverLinks(settings) {
+    try {
+      const links = document.querySelectorAll('a[href]');
+      const validLinks = [];
+
+      for (const link of links) {
+        if (!this.linkLens.isValidLink(link)) continue;
+        if (link.href === window.location.href) continue;
+
+        const rect = link.getBoundingClientRect();
+        const isVisible = rect.width > 0 && rect.height > 0;
+        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+        // Calculate priority score
+        let priority = 0;
+        if (isVisible) priority += 10;
+        if (isInViewport) priority += 5;
+        if (link.href.startsWith(window.location.origin)) priority += 3;
+        if (rect.top < window.innerHeight * 0.5) priority += 2; // Above fold
+
+        validLinks.push({
+          url: link.href,
+          element: link,
+          priority,
+          isVisible,
+          isInViewport
+        });
+      }
+
+      // Sort by priority and limit to max links
+      this.discoveredLinks = validLinks
+        .sort((a, b) => b.priority - a.priority)
+        .slice(0, settings.maxLinksToPreload);
+
+      console.log(`[LinkLens Preloader] Discovered ${this.discoveredLinks.length} links for preloading`);
+      
+      // Add cache indicators if enabled
+      if (settings.showCacheIndicators) {
+        this.addCacheIndicators();
+      }
+
+    } catch (error) {
+      console.error('[LinkLens Preloader] Error discovering links:', error);
+    }
+  }
+
+  startPreloading(settings) {
+    if (this.preloadTimer) {
+      clearTimeout(this.preloadTimer);
+    }
+
+    // Start preloading after delay
+    this.preloadTimer = setTimeout(() => {
+      this.processPreloadQueue(settings);
+    }, settings.preloadDelay * 1000);
+  }
+
+  async processPreloadQueue(settings) {
+    if (this.isPreloading || !this.cache) return;
+
+    this.isPreloading = true;
+    this.preloadQueue = [...this.discoveredLinks];
+
+    console.log(`[LinkLens Preloader] Starting preload of ${this.preloadQueue.length} links`);
+
+    while (this.preloadQueue.length > 0 && this.activePreloads.size < this.maxConcurrentPreloads) {
+      const linkInfo = this.preloadQueue.shift();
+      if (!linkInfo) continue;
+
+      // Skip if already cached
+      if (this.cache.get(linkInfo.url)) {
+        continue;
+      }
+
+      this.preloadLink(linkInfo);
+    }
+  }
+
+  async preloadLink(linkInfo) {
+    if (this.activePreloads.has(linkInfo.url)) return;
+    
+    this.activePreloads.add(linkInfo.url);
+
+    try {
+      console.log(`[LinkLens Preloader] Preloading ${linkInfo.url}`);
+
+      const response = await fetch(linkInfo.url, {
+        method: 'GET',
+        mode: 'no-cors',
+        cache: 'force-cache',
+        credentials: 'omit'
+      });
+
+      // For no-cors requests, we can't access the content directly
+      // So we'll cache a placeholder that indicates it's been preloaded
+      const placeholder = {
+        url: linkInfo.url,
+        preloaded: true,
+        timestamp: Date.now()
+      };
+
+      const size = 1024; // Placeholder size
+      this.cache.set(linkInfo.url, placeholder, size);
+
+      // Update cache indicator
+      if (this.linkLens.settings.showCacheIndicators) {
+        this.updateCacheIndicator(linkInfo.element, true);
+      }
+
+    } catch (error) {
+      console.warn(`[LinkLens Preloader] Failed to preload ${linkInfo.url}:`, error);
+    } finally {
+      this.activePreloads.delete(linkInfo.url);
+      
+      // Continue processing queue
+      if (this.preloadQueue.length > 0 && this.cache) {
+        setTimeout(() => {
+          this.processPreloadQueue(this.linkLens.settings);
+        }, 100);
+      }
+    }
+  }
+
+  addCacheIndicators() {
+    this.discoveredLinks.forEach(linkInfo => {
+      this.updateCacheIndicator(linkInfo.element, false);
+    });
+  }
+
+  updateCacheIndicator(element, isCached) {
+    try {
+      const indicator = element.querySelector('.linklens-cache-indicator');
+      
+      if (isCached) {
+        if (!indicator) {
+          const dot = document.createElement('span');
+          dot.className = 'linklens-cache-indicator';
+          dot.style.cssText = `
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-left: 4px;
+            opacity: 0.7;
+            vertical-align: middle;
+          `;
+          element.appendChild(dot);
+        }
+      } else if (indicator) {
+        indicator.remove();
+      }
+    } catch (error) {
+      // Silently fail if we can't add indicators
+    }
+  }
+
+  getCachedContent(url) {
+    return this.cache ? this.cache.get(url) : null;
+  }
+
+  destroy() {
+    if (this.preloadTimer) {
+      clearTimeout(this.preloadTimer);
+    }
+    
+    if (this.cache) {
+      this.cache.destroy();
+      this.cache = null;
+    }
+
+    // Remove cache indicators
+    document.querySelectorAll('.linklens-cache-indicator').forEach(indicator => {
+      indicator.remove();
+    });
+
+    this.discoveredLinks = [];
+    this.preloadQueue = [];
+    this.activePreloads.clear();
+    this.isPreloading = false;
+  }
+}
+
 class LinkLens {
   constructor() {
     this.overlay = null;
@@ -23,13 +369,21 @@ class LinkLens {
       autoCloseTimer: 0,
       animations: true,
       soundEffects: false,
-      backgroundOpacity: 60
+      backgroundOpacity: 60,
+      enablePreloading: false,
+      maxLinksToPreload: 15,
+      cacheSizeLimit: 50,
+      preloadDelay: 3,
+      showCacheIndicators: false
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.detectCloudflareChallenge = this.detectCloudflareChallenge.bind(this);
     this.handleSettingsUpdate = this.handleSettingsUpdate.bind(this);
+
+    // Initialize preloader
+    this.preloader = new LinkPreloader(this);
 
     this.init();
   }
@@ -69,6 +423,9 @@ class LinkLens {
         console.warn('[LinkLens] Failed to load settings from local storage:', localError);
       }
     }
+
+    // Initialize preloader with current settings
+    this.preloader.initialize(this.settings);
   }
 
   addEventListeners() {
@@ -83,7 +440,13 @@ class LinkLens {
         passive: false 
       });
 
-      window.addEventListener('beforeunload', () => this.destroy());
+      window.addEventListener('beforeunload', () => {
+        // Clean up cache before page unload
+        if (this.preloader) {
+          this.preloader.destroy();
+        }
+        this.destroy();
+      });
 
       chrome.runtime.onMessage.addListener(this.handleSettingsUpdate);
     } catch (error) {
@@ -101,6 +464,9 @@ class LinkLens {
         const backdrop = this.overlay.parentElement;
         this.applyThemeSettings(this.overlay, backdrop);
       }
+
+      // Reinitialize preloader with new settings
+      this.preloader.initialize(this.settings);
       
       sendResponse({ success: true });
     }
@@ -349,6 +715,12 @@ class LinkLens {
 
       if (!url || typeof url !== 'string') {
         throw new Error('Invalid URL provided');
+      }
+
+      // Check if URL is cached for faster loading
+      const cachedContent = this.preloader.getCachedContent(url);
+      if (cachedContent) {
+        console.log('[LinkLens] Using cached content for:', url);
       }
 
       await this.createOverlayElements(url);
@@ -841,6 +1213,11 @@ class LinkLens {
       this.removeEventListeners();
       
       this.closeLinkLens();
+
+      // Destroy preloader and clear cache
+      if (this.preloader) {
+        this.preloader.destroy();
+      }
       
       // console.log('[LinkLens] Extension destroyed');
     } catch (error) {

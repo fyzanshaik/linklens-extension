@@ -9,7 +9,12 @@ class LinkLensSettings {
       autoCloseTimer: 0,
       animations: true,
       soundEffects: false,
-      backgroundOpacity: 60
+      backgroundOpacity: 60,
+      enablePreloading: false,
+      maxLinksToPreload: 15,
+      cacheSizeLimit: 50,
+      preloadDelay: 3,
+      showCacheIndicators: false
     };
 
     this.currentSettings = { ...this.defaultSettings };
@@ -83,13 +88,18 @@ class LinkLensSettings {
     });
 
     // Toggle switches
-    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects'];
+    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'enablePreloading', 'showCacheIndicators'];
     toggles.forEach(toggleId => {
       const toggle = document.getElementById(toggleId);
       if (toggle) {
         toggle.addEventListener('click', () => {
           this.currentSettings[toggleId] = !this.currentSettings[toggleId];
           this.updateToggle(toggleId);
+          
+          // Show/hide cache settings based on preloading toggle
+          if (toggleId === 'enablePreloading') {
+            this.toggleCacheSettingsVisibility();
+          }
         });
       }
     });
@@ -130,6 +140,31 @@ class LinkLensSettings {
       });
     }
 
+    // Cache settings sliders
+    const maxLinksSlider = document.getElementById('maxLinksToPreload');
+    if (maxLinksSlider) {
+      maxLinksSlider.addEventListener('input', (e) => {
+        this.currentSettings.maxLinksToPreload = parseInt(e.target.value);
+        this.updateSliderValue('maxLinksToPreload', e.target.value + ' links');
+      });
+    }
+
+    const cacheSizeSlider = document.getElementById('cacheSizeLimit');
+    if (cacheSizeSlider) {
+      cacheSizeSlider.addEventListener('input', (e) => {
+        this.currentSettings.cacheSizeLimit = parseInt(e.target.value);
+        this.updateSliderValue('cacheSizeLimit', e.target.value + 'MB');
+      });
+    }
+
+    const preloadDelaySlider = document.getElementById('preloadDelay');
+    if (preloadDelaySlider) {
+      preloadDelaySlider.addEventListener('input', (e) => {
+        this.currentSettings.preloadDelay = parseInt(e.target.value);
+        this.updateSliderValue('preloadDelay', e.target.value + 's');
+      });
+    }
+
     // Action buttons
     document.getElementById('saveBtn')?.addEventListener('click', () => {
       this.saveSettings();
@@ -146,6 +181,7 @@ class LinkLensSettings {
     this.updateColorSelection();
     this.updateSliders();
     this.updateThemeColor(this.currentSettings.themeColor);
+    this.toggleCacheSettingsVisibility();
   }
 
   updateKeySelection() {
@@ -158,7 +194,7 @@ class LinkLensSettings {
   }
 
   updateToggles() {
-    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects'];
+    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'enablePreloading', 'showCacheIndicators'];
     toggles.forEach(toggleId => {
       this.updateToggle(toggleId);
     });
@@ -202,6 +238,25 @@ class LinkLensSettings {
     if (backgroundOpacitySlider) {
       backgroundOpacitySlider.value = this.currentSettings.backgroundOpacity;
       this.updateSliderValue('backgroundOpacity', this.currentSettings.backgroundOpacity + '%');
+    }
+
+    // Cache settings sliders
+    const maxLinksSlider = document.getElementById('maxLinksToPreload');
+    if (maxLinksSlider) {
+      maxLinksSlider.value = this.currentSettings.maxLinksToPreload;
+      this.updateSliderValue('maxLinksToPreload', this.currentSettings.maxLinksToPreload + ' links');
+    }
+
+    const cacheSizeSlider = document.getElementById('cacheSizeLimit');
+    if (cacheSizeSlider) {
+      cacheSizeSlider.value = this.currentSettings.cacheSizeLimit;
+      this.updateSliderValue('cacheSizeLimit', this.currentSettings.cacheSizeLimit + 'MB');
+    }
+
+    const preloadDelaySlider = document.getElementById('preloadDelay');
+    if (preloadDelaySlider) {
+      preloadDelaySlider.value = this.currentSettings.preloadDelay;
+      this.updateSliderValue('preloadDelay', this.currentSettings.preloadDelay + 's');
     }
   }
 
@@ -254,6 +309,29 @@ class LinkLensSettings {
       setTimeout(() => {
         statusElement.classList.remove('show');
       }, 3000);
+    }
+  }
+
+  toggleCacheSettingsVisibility() {
+    const cacheSection = document.getElementById('cacheSettings');
+    if (cacheSection) {
+      if (this.currentSettings.enablePreloading) {
+        cacheSection.style.display = 'block';
+        // Use requestAnimationFrame for smooth animation
+        requestAnimationFrame(() => {
+          cacheSection.style.opacity = '1';
+          cacheSection.style.maxHeight = '300px';
+        });
+      } else {
+        cacheSection.style.opacity = '0';
+        cacheSection.style.maxHeight = '0';
+        // Hide after animation completes
+        setTimeout(() => {
+          if (!this.currentSettings.enablePreloading) {
+            cacheSection.style.display = 'none';
+          }
+        }, 300);
+      }
     }
   }
 }
