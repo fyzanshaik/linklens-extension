@@ -384,6 +384,37 @@
             font-size: 11px;
             color: var(--text-secondary);
         }
+
+        /* Cache settings animation */
+        #cacheSettings {
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            overflow: hidden;
+            max-height: 0;
+        }
+
+        #cacheSettings.show {
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+        /* Cache indicator styles */
+        .linklens-cache-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-left: 4px;
+            opacity: 0.7;
+            vertical-align: middle;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
@@ -498,6 +529,82 @@
                             <span class="slider-value" id="backgroundOpacityValue">60%</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cache Settings -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-icon">🚀</span>
+                Performance
+            </div>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Enable Link Preloading</div>
+                        <div class="setting-description">Preload links in background for instant previews</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="enablePreloading">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="cacheSettings" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div class="setting-title">Max Links to Preload</div>
+                            <div class="setting-description">Number of links to preload per page</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="maxLinksToPreload" min="5" max="20" value="15">
+                                <span class="slider-value" id="maxLinksToPreloadValue">15 links</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div class="setting-title">Cache Size Limit</div>
+                            <div class="setting-description">Maximum memory for cached content</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="cacheSizeLimit" min="20" max="100" value="50">
+                                <span class="slider-value" id="cacheSizeLimitValue">50MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div class="setting-title">Preload Delay</div>
+                            <div class="setting-description">Delay before starting background preloads</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="preloadDelay" min="1" max="10" value="3">
+                                <span class="slider-value" id="preloadDelayValue">3s</span>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="setting-item">
+                            <div class="setting-label">
+                                <div class="setting-title">Show Cache Indicators</div>
+                                <div class="setting-description">Show subtle indicators for cached links</div>
+                            </div>
+                            <div class="setting-control">
+                                <div class="toggle-switch" id="showCacheIndicators">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-item" style="border-bottom: none; padding-bottom: 12px;">
+                            <div class="setting-label">
+                                <div class="setting-title">Cache Status</div>
+                                <div class="setting-description" id="cacheStatus">Cache information will appear here when enabled</div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
