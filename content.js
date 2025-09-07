@@ -46,7 +46,7 @@ class LinkLens {
       this.getCurrentTabId();
       this.detectCloudflareChallenge();
 
-      console.log('[LinkLens] Extension initialized successfully');
+      // console.log('[LinkLens] Extension initialized successfully');
     } catch (error) {
       this.handleError('Initialization failed', error);
     }
@@ -94,7 +94,7 @@ class LinkLens {
   handleSettingsUpdate(message, sender, sendResponse) {
     if (message.action === 'settingsUpdated') {
       this.settings = { ...this.settings, ...message.settings };
-      console.log('[LinkLens] Settings updated:', this.settings);
+      // console.log('[LinkLens] Settings updated:', this.settings);
       
       // Update theme immediately if there's an active overlay
       if (this.overlay) {
@@ -248,16 +248,16 @@ class LinkLens {
                                   (hasChallengeTitle && (hasActiveChallengeElements || hasChallengeMetaTags));
 
       if (this.isCloudflareChallenge && !wasCloudflareChallenge) {
-        console.log('[LinkLens] Active Cloudflare challenge detected - extension disabled for this page');
-        console.log('[LinkLens] Challenge indicators:', {
-          elements: hasActiveChallengeElements,
-          text: hasActiveChallengeText,
-          url: isChallengeUrl,
-          title: hasChallengeTitle
-        });
+        // console.log('[LinkLens] Active Cloudflare challenge detected - extension disabled for this page');
+        // console.log('[LinkLens] Challenge indicators:', {
+          // elements: hasActiveChallengeElements,
+          // text: hasActiveChallengeText,
+          // url: isChallengeUrl,
+          // title: hasChallengeTitle
+        // });
         this.closeLinkLens(); // Close any existing glimpse
       } else if (!this.isCloudflareChallenge && wasCloudflareChallenge) {
-        console.log('[LinkLens] Cloudflare challenge resolved - extension re-enabled');
+        // console.log('[LinkLens] Cloudflare challenge resolved - extension re-enabled');
       }
 
       if (!this.isDestroyed) {
@@ -353,7 +353,7 @@ class LinkLens {
 
       await this.createOverlayElements(url);
       
-      console.log('[LinkLens] Created glimpse for:', url);
+      // console.log('[LinkLens] Created glimpse for:', url);
     } catch (error) {
       this.handleError('Failed to create glimpse', error, url);
     }
@@ -782,7 +782,7 @@ class LinkLens {
         document.body.classList.remove('linklens-active');
       }
 
-      console.log('[LinkLens] Closed glimpse overlay');
+      // console.log('[LinkLens] Closed glimpse overlay');
     } catch (error) {
       this.handleError('Failed to close glimpse', error);
       
@@ -808,7 +808,7 @@ class LinkLens {
 
     if (this.shouldRetry(error) && this.retryCount < this.maxRetries) {
       this.retryCount++;
-      console.log(`[LinkLens] Retrying operation (${this.retryCount}/${this.maxRetries})`);
+      // console.log(`[LinkLens] Retrying operation (${this.retryCount}/${this.maxRetries})`);
       
       setTimeout(() => {
         if (context && typeof context === 'string') {
@@ -842,7 +842,7 @@ class LinkLens {
       
       this.closeLinkLens();
       
-      console.log('[LinkLens] Extension destroyed');
+      // console.log('[LinkLens] Extension destroyed');
     } catch (error) {
       console.error('[LinkLens] Error during destruction:', error);
     }
