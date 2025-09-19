@@ -31,7 +31,8 @@
         "cdn-cgi/challenge-platform",
         "cf-challenge",
         "__cf_challenge__",
-        "__cf_chl_"
+        "__cf_chl_",
+        "turnstile"
       ]
     }
   }

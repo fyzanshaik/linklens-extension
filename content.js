@@ -530,8 +530,9 @@ class LinkLens {
       const iframe = this.createElement('iframe', {
         className: 'linklens-iframe',
         src: url,
-        sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation',
-        referrerPolicy: 'no-referrer'
+        allow: 'autoplay; fullscreen',
+        sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation allow-modals',
+        referrerPolicy: 'origin-when-cross-origin'
       });
 
       iframe.onload = () => {
