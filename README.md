@@ -8,7 +8,7 @@
 
 [![Version](https://img.shields.io/badge/version-1.3.3-blue.svg)](https://github.com/fyzanshaik/linklens-extension/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Chrome](https://img.shields.io/badge/chrome-extension-orange.svg)](https://chrome.google.com/webstore)
+[![Chrome Web Store](https://img.shields.io/badge/chrome-web%20store-orange.svg)](https://chromewebstore.google.com/detail/linklens/gpbempopkomagldobkjildebaendgonn)
 
 [Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Settings](#%EF%B8%8F-settings) • [Privacy](#-privacy)
 
@@ -20,9 +20,9 @@
 
 ### 🌐 Chrome Web Store (Recommended)
 
-> 🔄 **Status**: Under review - Coming soon!
->
-> The extension is currently being reviewed by the Chrome Web Store team. Check back soon for the official download link.
+**[➜ Install from Chrome Web Store](https://chromewebstore.google.com/detail/linklens/gpbempopkomagldobkjildebaendgonn)**
+
+Click the link above and hit **"Add to Chrome"** - that's it! The extension will install automatically and be ready to use in seconds.
 
 ### 🛠️ Manual Installation (Developer Mode)
 
@@ -266,7 +266,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
 
-- 🌐 **Website**: [Chrome Web Store](#) *(coming soon)*
+- 🌐 **Chrome Web Store**: [Install LinkLens](https://chromewebstore.google.com/detail/linklens/gpbempopkomagldobkjildebaendgonn)
 - 💻 **GitHub**: [fyzanshaik/linklens-extension](https://github.com/fyzanshaik/linklens-extension)
 - 🐛 **Issues**: [Report a bug](https://github.com/fyzanshaik/linklens-extension/issues)
 - ☕ **Support**: [Buy me a coffee](https://coff.ee/fyzanshaik)
