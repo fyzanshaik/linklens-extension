@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "LinkLens",
-  "version": "1.3.2",
-  "description": "Hold Ctrl and click any link to preview it in a floating window.",
+  "version": "1.3.3",
+  "description": "Ctrl+click or long-press any link to preview it in a floating window.",
   "permissions": [
     "declarativeNetRequest",
     "storage"

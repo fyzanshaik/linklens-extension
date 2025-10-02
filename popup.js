@@ -3,6 +3,8 @@ class LinkLensSettings {
     this.defaultSettings = {
       modifierKey: 'ctrl',
       macSupport: true,
+      longClickEnabled: true,
+      longClickDuration: 500,
       themeColor: '#667eea',
       applyThemeToHeader: false,
       darkMode: false,
@@ -85,7 +87,7 @@ class LinkLensSettings {
     });
 
     // Toggle switches
-    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'backdropBlur'];
+    const toggles = ['macSupport', 'longClickEnabled', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'backdropBlur'];
     toggles.forEach(toggleId => {
       const toggle = document.getElementById(toggleId);
       if (toggle) {
@@ -132,6 +134,14 @@ class LinkLensSettings {
       });
     }
 
+    const longClickDurationSlider = document.getElementById('longClickDuration');
+    if (longClickDurationSlider) {
+      longClickDurationSlider.addEventListener('input', (e) => {
+        this.currentSettings.longClickDuration = parseInt(e.target.value);
+        this.updateSliderValue('longClickDuration', e.target.value + 'ms');
+      });
+    }
+
     // Action buttons
     document.getElementById('saveBtn')?.addEventListener('click', () => {
       this.saveSettings();
@@ -160,7 +170,7 @@ class LinkLensSettings {
   }
 
   updateToggles() {
-    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'backdropBlur'];
+    const toggles = ['macSupport', 'longClickEnabled', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'backdropBlur'];
     toggles.forEach(toggleId => {
       this.updateToggle(toggleId);
     });
@@ -204,6 +214,12 @@ class LinkLensSettings {
     if (backgroundOpacitySlider) {
       backgroundOpacitySlider.value = this.currentSettings.backgroundOpacity;
       this.updateSliderValue('backgroundOpacity', this.currentSettings.backgroundOpacity + '%');
+    }
+
+    const longClickDurationSlider = document.getElementById('longClickDuration');
+    if (longClickDurationSlider) {
+      longClickDurationSlider.value = this.currentSettings.longClickDuration;
+      this.updateSliderValue('longClickDuration', this.currentSettings.longClickDuration + 'ms');
     }
   }
 

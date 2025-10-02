@@ -2,6 +2,16 @@ body.linklens-active {
   overflow: hidden;
 }
 
+/* Long click visual feedback */
+a.linklens-long-click-active {
+  position: relative;
+  background-color: rgba(102, 126, 234, 0.08) !important;
+  border-radius: 3px;
+  outline: 2px solid rgba(102, 126, 234, 0.3) !important;
+  outline-offset: 2px;
+  transition: background-color 0.2s ease, outline 0.2s ease;
+}
+
 .linklens-backdrop {
   position: fixed;
   top: 0;

@@ -16,6 +16,8 @@ class LinkLens {
     this.settings = {
       modifierKey: 'ctrl',
       macSupport: true,
+      longClickEnabled: true,
+      longClickDuration: 500,
       themeColor: '#667eea',
       applyThemeToHeader: false,
       darkMode: false,
@@ -27,7 +29,14 @@ class LinkLens {
       backdropBlur: false
     };
 
+    // Long click tracking
+    this.longClickTimer = null;
+    this.longClickTarget = null;
+    this.longClickStartPos = { x: 0, y: 0 };
+
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.detectCloudflareChallenge = this.detectCloudflareChallenge.bind(this);
     this.handleSettingsUpdate = this.handleSettingsUpdate.bind(this);
@@ -76,12 +85,19 @@ class LinkLens {
     try {
       this.removeEventListeners();
 
-      document.addEventListener('mousedown', this.handleMouseDown, { 
-        capture: true, 
-        passive: false 
+      document.addEventListener('mousedown', this.handleMouseDown, {
+        capture: true,
+        passive: false
       });
-      document.addEventListener('keydown', this.handleKeyDown, { 
-        passive: false 
+      document.addEventListener('mouseup', this.handleMouseUp, {
+        capture: true,
+        passive: false
+      });
+      document.addEventListener('mousemove', this.handleMouseMove, {
+        passive: true
+      });
+      document.addEventListener('keydown', this.handleKeyDown, {
+        passive: false
       });
 
       window.addEventListener('beforeunload', () => this.destroy());
@@ -125,6 +141,8 @@ class LinkLens {
   removeEventListeners() {
     try {
       document.removeEventListener('mousedown', this.handleMouseDown, true);
+      document.removeEventListener('mouseup', this.handleMouseUp, true);
+      document.removeEventListener('mousemove', this.handleMouseMove);
       document.removeEventListener('keydown', this.handleKeyDown);
     } catch (error) {
       console.warn('[LinkLens] Error removing event listeners:', error);
@@ -287,8 +305,7 @@ class LinkLens {
         return;
       }
 
-      const isModifierPressed = this.checkModifierKey(event);
-      if (!isModifierPressed || event.button !== 0) {
+      if (event.button !== 0) {
         return;
       }
 
@@ -297,12 +314,89 @@ class LinkLens {
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
+      const isModifierPressed = this.checkModifierKey(event);
 
-      this.createLinkLens(link.href);
+      // Modifier key + click: immediate preview (existing behavior)
+      if (isModifierPressed) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.cancelLongClick();
+        this.createLinkLens(link.href);
+        return;
+      }
+
+      // Long click: start timer if enabled
+      if (this.settings.longClickEnabled) {
+        this.startLongClick(event, link);
+      }
     } catch (error) {
       this.handleError('Mouse down handler failed', error);
+    }
+  }
+
+  startLongClick(event, link) {
+    try {
+      this.cancelLongClick();
+
+      this.longClickTarget = link;
+      this.longClickStartPos = { x: event.clientX, y: event.clientY };
+
+      // Add visual feedback
+      link.classList.add('linklens-long-click-active');
+
+      this.longClickTimer = setTimeout(() => {
+        if (this.longClickTarget === link) {
+          event.preventDefault();
+          this.createLinkLens(link.href);
+          this.cancelLongClick();
+        }
+      }, this.settings.longClickDuration);
+    } catch (error) {
+      this.handleError('Long click start failed', error);
+    }
+  }
+
+  handleMouseUp(event) {
+    try {
+      // Cancel long click if mouse is released before duration completes
+      this.cancelLongClick();
+    } catch (error) {
+      this.handleError('Mouse up handler failed', error);
+    }
+  }
+
+  handleMouseMove(event) {
+    try {
+      if (!this.longClickTimer || !this.longClickTarget) {
+        return;
+      }
+
+      // Cancel if mouse moves more than 10 pixels away
+      const dx = event.clientX - this.longClickStartPos.x;
+      const dy = event.clientY - this.longClickStartPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance > 10) {
+        this.cancelLongClick();
+      }
+    } catch (error) {
+      this.handleError('Mouse move handler failed', error);
+    }
+  }
+
+  cancelLongClick() {
+    try {
+      if (this.longClickTimer) {
+        clearTimeout(this.longClickTimer);
+        this.longClickTimer = null;
+      }
+
+      if (this.longClickTarget) {
+        this.longClickTarget.classList.remove('linklens-long-click-active');
+        this.longClickTarget = null;
+      }
+    } catch (error) {
+      console.warn('[LinkLens] Failed to cancel long click:', error);
     }
   }
 

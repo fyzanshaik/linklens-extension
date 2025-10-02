@@ -1,160 +1,282 @@
+<div align="center">
+
 # 🔍 LinkLens
 
-**Version 1.3.2** - Instant link previews without leaving your page.
+**Preview any link instantly with Ctrl+Click or Long-Press**
 
-*Previously known as Glimpse*
+*Formerly known as Glimpse*
 
-Hold `Ctrl` + click any link to preview it in a floating window. No more tab switching.
+[![Version](https://img.shields.io/badge/version-1.3.3-blue.svg)](https://github.com/fyzanshaik/linklens-extension/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Chrome](https://img.shields.io/badge/chrome-extension-orange.svg)](https://chrome.google.com/webstore)
+
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Settings](#%EF%B8%8F-settings) • [Privacy](#-privacy)
+
+</div>
+
+---
+
+## 📥 Installation
+
+### 🌐 Chrome Web Store (Recommended)
+
+> 🔄 **Status**: Under review - Coming soon!
+>
+> The extension is currently being reviewed by the Chrome Web Store team. Check back soon for the official download link.
+
+### 🛠️ Manual Installation (Developer Mode)
+
+Perfect for trying out the latest features before they hit the store!
+
+1. **Download the Extension**
+   ```bash
+   git clone https://github.com/fyzanshaik/linklens-extension.git
+   ```
+   Or download the [ZIP file](https://github.com/fyzanshaik/linklens-extension/archive/refs/heads/main.zip) and extract it
+
+2. **Open Chrome Extensions Page**
+   - Navigate to `chrome://extensions/`
+   - Or click Menu (⋮) → **More Tools** → **Extensions**
+
+3. **Enable Developer Mode**
+   - Toggle the **Developer mode** switch in the top-right corner
+
+4. **Load the Extension**
+   - Click **Load unpacked**
+   - Select the `linklens-extension` folder you just downloaded
+   - Done! ✅ The extension icon should appear in your toolbar
+
+5. **Start Using**
+   - `Ctrl` + click any link, or just long-press it!
 
 ---
 
 ## ✨ Features
 
-- **🖱️ Instant Previews**: `Ctrl` + click any link for zero-jitter instant previews
-- **🎨 Highly Customizable**: Theme colors, window size, backdrop blur, animations, and more
-- **⚡ Blazing Fast**: Animations OFF by default for instant, smooth previews
-- **🛡️ Smart Cloudflare**: Works on protected sites, disables only during challenges
-- **🌐 Universal Compatibility**: Works on sites with X-Frame-Options (pkg.go.dev, docs sites, etc.)
-- **🔐 Privacy First**: No data collection, local processing only
-- **📱 Fully Responsive**: Adaptive UI across all screen sizes
-- **🎯 Reliable**: Enterprise-grade error handling & fallback mechanisms
+### 🖱️ **Dual Trigger Methods**
+Choose your preferred way to preview:
+- **Quick Preview**: `Ctrl` + click (or `Cmd` + click on Mac)
+- **Long Press**: Hold mouse button for 500ms (customizable 300-1500ms)
+- **Both Work Together**: Use whichever feels natural!
+
+### 🎯 **Universal Compatibility**
+- ✅ Works on **X-Frame-Options** protected sites (pkg.go.dev, docs.python.org, etc.)
+- ✅ Smart **Cloudflare** detection - works on protected sites
+- ✅ Automatic fallback for incompatible pages
+- ✅ Respects security headers during verification flows
+
+### 🎨 **Highly Customizable**
+- 🎨 **6 Theme Colors** - Match your style
+- 📐 **Adjustable Window Size** - 60% to 95% viewport
+- 🌓 **Dark Mode** - Easy on the eyes
+- 💨 **Backdrop Blur** - Optional background blur effect
+- ⚡ **Animation Control** - Smooth or instant (your choice)
+
+### ⚡ **Blazing Fast Performance**
+- 🚀 Zero-jitter instant previews
+- 🎯 GPU-accelerated animations (when enabled)
+- 🧠 Smart memory management
+- 📊 60fps smooth scrolling
+
+### 🔐 **Privacy First**
+- 🚫 **Zero data collection** - Nothing leaves your device
+- 🔒 **Local processing only** - All operations happen on your machine
+- 👁️ **No tracking** - No analytics, no telemetry
+- 🛡️ **Minimal permissions** - Only what's absolutely necessary
 
 ---
 
-## 🚀 Installation
+## 🚀 Usage
 
-### Chrome Web Store (Coming Soon)
-Extension is under review for publication.
+### Quick Start
 
-### Developer Install
-1. Clone: `git clone https://github.com/fyzanshaik/linklens-extension.git`
-2. Open `chrome://extensions/`
-3. Enable "Developer mode"
-4. Click "Load unpacked" → select folder
-5. Ready to use!
+1. **Browse any website** as normal
+2. **Hover over a link** you want to preview
+3. **Choose your method**:
+   - **Fast**: Hold `Ctrl` (or `Cmd` on Mac) and click
+   - **Easy**: Long-press the link (hold for 0.5 seconds)
+4. **Preview appears** in a beautiful floating window
+5. **Close** by clicking outside, pressing `Esc`, or clicking the × button
+
+### Visual Feedback
+
+- 🔵 **Long-press active**: Link highlights with subtle blue outline
+- ⏱️ **Timer running**: Hold steady for 500ms (customizable)
+- ❌ **Cancelled**: Move mouse >10px or release early
+- ✅ **Preview opens**: Full-screen overlay with your content
 
 ---
 
-## ⚙️ Customization
+## ⚙️ Settings
 
-Access settings by clicking the LinkLens icon in your browser toolbar. Available options:
+Click the **LinkLens icon** in your toolbar to customize everything:
 
-### 🔧 Trigger Settings
-- **Modifier Key**: Choose between Ctrl, Alt, or Shift
-- **Mac Support**: Auto-use Cmd key instead of Ctrl on macOS
+### 🎯 Trigger Settings
+| Setting | Options | Default | Description |
+|---------|---------|---------|-------------|
+| **Modifier Key** | Ctrl / Alt / Shift | Ctrl | Quick preview key |
+| **Mac Support** | ON / OFF | ON | Use Cmd instead of Ctrl |
+| **Long Click** | ON / OFF | ON | Enable long-press trigger |
+| **Long Click Duration** | 300ms - 1500ms | 500ms | Hold time for long-press |
 
 ### 🎨 Appearance
-- **Theme Color**: 6 beautiful preset colors
-- **Apply Theme to Header**: Optional themed preview window header
-- **Dark Mode**: Enable dark theme for preview windows
-- **Window Size**: Adjust default preview size (60-95%)
-- **Background Opacity**: Control overlay darkness (20-90%)
-- **Backdrop Blur**: Toggle background blur effect (OFF by default)
+| Setting | Options | Default | Description |
+|---------|---------|---------|-------------|
+| **Theme Color** | 6 presets | Purple | Accent color |
+| **Apply to Header** | ON / OFF | OFF | Themed window header |
+| **Dark Mode** | ON / OFF | OFF | Dark theme |
+| **Window Size** | 60% - 95% | 80% | Preview size |
+| **Background Opacity** | 20% - 90% | 60% | Overlay darkness |
+| **Backdrop Blur** | ON / OFF | OFF | Background blur |
 
 ### ⚙️ Behavior
-- **Auto-close Timer**: Automatically close previews after inactivity (0-30s)
-- **Show Animations**: Toggle smooth transitions (OFF by default for best performance)
-- **Sound Effects**: Optional subtle interaction sounds
-
----
-
-## 📋 Changelog
-
-### v1.3.2 (Latest) - Performance & Compatibility Overhaul
-#### 🔧 Critical Fixes
-- **Fixed**: Re-enabled declarativeNetRequest to strip X-Frame-Options headers
-- **Fixed**: Sites like `pkg.go.dev`, `docs.python.org`, and others now work in iframe previews
-- **Fixed**: Backdrop blur showing when disabled in settings
-- **Fixed**: Button size inconsistency - close (X) and open (⧉) buttons now identical size
-- **Fixed**: Animation jitter and sluggishness on complex pages
-
-#### ⚡ Performance Improvements
-- **Optimized**: Separated blur animation from opacity for 60fps performance
-- **Added**: GPU acceleration with `will-change` hints and `translateZ(0)`
-- **Improved**: Hardware-accelerated transforms for smooth animations
-- **Enhanced**: Memory management - auto-cleanup of `will-change` after animations
-- **Default**: Animations OFF for instant, zero-jitter previews
-
-#### 🎨 UI Enhancements
-- **Improved**: Enhanced backdrop blur with smoother animation (8px blur)
-- **Added**: Backdrop Blur toggle in settings (OFF by default)
-- **Fixed**: Button visual consistency across all screen sizes
-- **Enhanced**: Better shadows, rounded corners (16px), and modern polish
-- **Improved**: Responsive button sizing with proper min-width/min-height
-
-#### 🛡️ Security & Compatibility
-- **Enhanced**: Comprehensive Cloudflare domain exclusions (cloudflare.com, challenges.cloudflare.com, etc.)
-- **Added**: Defense-in-depth with both domain AND path-based exclusions
-- **Maintained**: Smart Cloudflare detection still works for active challenge pages
-- **Safe**: Never strips headers from Cloudflare verification resources
-
-### v1.3.1 - Enhanced UI & Theme Control
-- **Fixed**: Theme color changes now properly apply to preview window header
-- **Fixed**: Animation toggle now works correctly
-- **Added**: Background opacity control for overlay darkness adjustment
-- **Improved**: Cleaner, more compact popup design without gradient header
-- **Enhanced**: Reduced spacing and streamlined layout for better UX
-
-### v1.3.0 - Comprehensive Settings Panel
-- **New**: Complete settings interface with extensive customization options
-- **Added**: Configurable modifier keys (Ctrl/Alt/Shift), theme colors, window sizes
-- **Enhanced**: Auto-close timers, sound effects, dark mode, animation controls
-- **Improved**: User-friendly popup with save/reset functionality
-
-### v1.2.1 - Improved Icon Design
-- **Enhanced**: Much better, more professional icon design
-- **Refined**: Cleaner lens and link concept with better gradients
-- **Polished**: Modern design with subtle depth and highlights
-
-### v1.2.0 - LinkLens Rebrand
-- **Rebranded**: Complete rebrand from Glimpse to LinkLens
-- **New Icon**: Clean, professional icon with link + lens concept
-- **Updated**: All UI elements, documentation, and branding
-
-### v1.1.2 - Smart Cloudflare Detection
-- **Fixed**: Works on Cloudflare-protected sites normally
-- **Enhanced**: Only disables during active human verification
-- **Improved**: Precision detection of challenge pages
-- **Added**: Detailed challenge detection logging
-
-### v1.1.1 - Button Consistency
-- **Fixed**: Button size inconsistency
-- **Improved**: Better Unicode symbols
-- **Enhanced**: Responsive button sizing
-
-### v1.1.0 - Major Redesign
-- **New**: Ultra-sleek minimal interface
-- **Added**: Enterprise-grade error handling
-- **Enhanced**: Memory management & performance
-- **Improved**: Comprehensive input validation
-
-### v1.0.1 - Cloudflare Compatibility
-- **Fixed**: Infinite verification loops
-- **Added**: Cloudflare challenge detection
-- **Enhanced**: Network request exclusions
-
-### v1.0.0 - Initial Release
-- **Core**: Basic link preview functionality
+| Setting | Options | Default | Description |
+|---------|---------|---------|-------------|
+| **Auto-close Timer** | 0s - 30s | Off | Close after inactivity |
+| **Animations** | ON / OFF | OFF | Smooth transitions |
+| **Sound Effects** | ON / OFF | OFF | Audio feedback |
 
 ---
 
 ## 🔒 Privacy
 
-- **Zero Data Collection**: Nothing stored or transmitted
-- **Local Processing**: Everything happens on your device
-- **Minimal Permissions**: Only what's needed for functionality
-- **No Tracking**: No analytics, no remote code
+LinkLens is built with privacy as a core principle:
+
+### What We DON'T Do
+- ❌ **No data collection** - We don't store or transmit any information
+- ❌ **No browsing history** - We never track what sites you visit
+- ❌ **No analytics** - Zero telemetry or usage statistics
+- ❌ **No external servers** - Everything happens locally on your device
+- ❌ **No third-party code** - No external dependencies or scripts
+
+### What We DO
+- ✅ **Local storage only** - Settings saved on your device via Chrome's sync
+- ✅ **Minimal permissions** - Only what's needed for core functionality
+- ✅ **Open source** - Code is public and auditable
+- ✅ **Transparent** - All operations documented
+
+### Permissions Explained
+
+**`declarativeNetRequest`**: Required to remove X-Frame-Options headers so websites can load in preview iframes. Only affects preview frames, never your main browsing.
+
+**`storage`**: Saves your preferences (theme, window size, etc.) and syncs across devices where you're signed into Chrome.
+
+**`<all_urls>`**: Allows the extension to detect Ctrl+clicks and long-presses on any page, and enables previews for any website you visit.
+
+---
+
+## 📋 Changelog
+
+<details>
+<summary><strong>v1.3.3 (Latest)</strong> - Long Click Support 🖱️</summary>
+
+#### ✨ New Feature - Issue #3
+- **Added**: Long-press/long-click trigger to open previews without modifier keys
+- **Added**: Customizable long-click duration (300ms - 1500ms, default 500ms)
+- **Added**: Visual feedback during long-press (subtle blue highlight)
+- **Added**: Smart cancellation if mouse moves >10px or releases early
+- **Enhanced**: Both trigger methods work independently (Ctrl+click OR long-press)
+- **Improved**: More accessible for touchpad users and those who prefer not using modifier keys
+
+</details>
+
+<details>
+<summary><strong>v1.3.2</strong> - Performance & Compatibility Overhaul</summary>
+
+#### 🔧 Critical Fixes
+- Re-enabled declarativeNetRequest to strip X-Frame-Options headers
+- Sites like pkg.go.dev, docs.python.org now work in iframe previews
+- Fixed backdrop blur showing when disabled in settings
+- Fixed button size inconsistency
+- Fixed animation jitter on complex pages
+
+#### ⚡ Performance Improvements
+- Separated blur animation for 60fps performance
+- Added GPU acceleration with will-change hints
+- Hardware-accelerated transforms
+- Memory management improvements
+- Animations OFF by default
+
+#### 🎨 UI Enhancements
+- Enhanced backdrop blur with smoother animation
+- New backdrop blur toggle in settings
+- Button visual consistency across all screen sizes
+- Better shadows and rounded corners
+- Improved responsive sizing
+
+#### 🛡️ Security & Compatibility
+- Comprehensive Cloudflare domain exclusions
+- Defense-in-depth with domain + path exclusions
+- Smart Cloudflare detection maintained
+- Safe header handling for verification
+
+</details>
+
+<details>
+<summary><strong>Earlier Versions</strong></summary>
+
+### v1.3.1 - Enhanced UI & Theme Control
+- Fixed theme color application to preview header
+- Fixed animation toggle functionality
+- Added background opacity control
+- Improved popup design
+
+### v1.3.0 - Comprehensive Settings Panel
+- Complete settings interface
+- Configurable modifier keys, themes, window sizes
+- Auto-close timers, sound effects, dark mode
+- User-friendly popup with save/reset
+
+### v1.2.0 - LinkLens Rebrand
+- Complete rebrand from Glimpse to LinkLens
+- New professional icon
+- Updated UI and documentation
+
+### v1.1.2 - Smart Cloudflare Detection
+- Works on Cloudflare-protected sites
+- Disables only during active verification
+- Precision challenge detection
+
+### v1.0.0 - Initial Release
+- Basic link preview functionality
+- Ctrl+click trigger
+- Minimal design
+
+</details>
 
 ---
 
 ## 🤝 Contributing
 
-Issues and PRs welcome! 
+We welcome contributions! Here's how you can help:
 
-## 📄 License
-
-MIT License - see `LICENSE` file.
+- 🐛 **Report bugs** - [Open an issue](https://github.com/fyzanshaik/linklens-extension/issues)
+- 💡 **Suggest features** - [Start a discussion](https://github.com/fyzanshaik/linklens-extension/discussions)
+- 🔧 **Submit PRs** - Fork, code, and submit!
+- 📖 **Improve docs** - Help make this README even better
+- ⭐ **Star the repo** - Show your support!
 
 ---
 
-**Links**: [GitHub](https://github.com/fyzanshaik/linklens-extension) • [Issues](https://github.com/fyzanshaik/linklens-extension/issues) • [Support](https://coff.ee/fyzanshaik)
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 🔗 Links
+
+- 🌐 **Website**: [Chrome Web Store](#) *(coming soon)*
+- 💻 **GitHub**: [fyzanshaik/linklens-extension](https://github.com/fyzanshaik/linklens-extension)
+- 🐛 **Issues**: [Report a bug](https://github.com/fyzanshaik/linklens-extension/issues)
+- ☕ **Support**: [Buy me a coffee](https://coff.ee/fyzanshaik)
+
+---
+
+<div align="center">
+
+**Made with ❤️ by [fyzanshaik](https://github.com/fyzanshaik)**
+
+If LinkLens helps you browse better, consider [buying me a coffee](https://coff.ee/fyzanshaik)! ☕
+
+</div>

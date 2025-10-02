@@ -427,6 +427,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Long Click to Preview</div>
+                        <div class="setting-description">Enable opening previews with long click</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="longClickEnabled">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-title">Long Click Duration</div>
+                        <div class="setting-description">Time to hold before preview opens</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="longClickDuration" min="300" max="1500" step="100" value="500">
+                            <span class="slider-value" id="longClickDurationValue">500ms</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -576,7 +599,7 @@
             <a href="https://github.com/fyzanshaik/linklens-extension/issues" class="footer-link" target="_blank">Support</a>
             <a href="https://coff.ee/fyzanshaik" class="footer-link" target="_blank">☕ Donate</a>
         </div>
-        <div class="version">LinkLens v1.3.2</div>
+        <div class="version">LinkLens v1.3.3</div>
     </div>
 
     <script src="popup.js"></script>
