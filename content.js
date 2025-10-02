@@ -21,9 +21,10 @@ class LinkLens {
       darkMode: false,
       windowSize: 80,
       autoCloseTimer: 0,
-      animations: true,
+      animations: false,
       soundEffects: false,
-      backgroundOpacity: 60
+      backgroundOpacity: 60,
+      backdropBlur: false
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -389,6 +390,10 @@ class LinkLens {
       backdrop.classList.add('no-animations');
     }
 
+    if (this.settings.backdropBlur) {
+      backdrop.classList.add('backdrop-blur-enabled');
+    }
+
         const header = this.createHeader(url);
         
         const iframeContainer = this.createElement('div', {
@@ -403,8 +408,13 @@ class LinkLens {
         backdrop.appendChild(overlay);
 
     this.addToDOM(backdrop);
-    
+
     this.overlay = backdrop;
+
+    // Remove will-change after animation completes for better performance
+    overlay.addEventListener('animationend', () => {
+      backdrop.classList.add('animation-complete');
+    }, { once: true });
 
     if (this.settings.soundEffects) {
       this.playSound('open');
@@ -677,6 +687,13 @@ class LinkLens {
       if (backdrop && backdrop.classList.contains('linklens-backdrop')) {
         const opacity = this.settings.backgroundOpacity / 100;
         backdrop.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+
+        // Apply or remove backdrop blur class
+        if (this.settings.backdropBlur) {
+          backdrop.classList.add('backdrop-blur-enabled');
+        } else {
+          backdrop.classList.remove('backdrop-blur-enabled');
+        }
       }
 
       const themeStyleId = 'linklens-theme-style';

@@ -4,12 +4,14 @@ class LinkLensSettings {
       modifierKey: 'ctrl',
       macSupport: true,
       themeColor: '#667eea',
+      applyThemeToHeader: false,
       darkMode: false,
       windowSize: 80,
       autoCloseTimer: 0,
-      animations: true,
+      animations: false,
       soundEffects: false,
-      backgroundOpacity: 60
+      backgroundOpacity: 60,
+      backdropBlur: false
     };
 
     this.currentSettings = { ...this.defaultSettings };
@@ -83,7 +85,7 @@ class LinkLensSettings {
     });
 
     // Toggle switches
-    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects'];
+    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'backdropBlur'];
     toggles.forEach(toggleId => {
       const toggle = document.getElementById(toggleId);
       if (toggle) {
@@ -158,7 +160,7 @@ class LinkLensSettings {
   }
 
   updateToggles() {
-    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects'];
+    const toggles = ['macSupport', 'applyThemeToHeader', 'darkMode', 'animations', 'soundEffects', 'backdropBlur'];
     toggles.forEach(toggleId => {
       this.updateToggle(toggleId);
     });

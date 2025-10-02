@@ -27,6 +27,18 @@
       "resourceTypes": [
         "sub_frame"
       ],
+      "excludedRequestDomains": [
+        "cloudflare.com",
+        "cloudflareinsights.com",
+        "cf-assets.com",
+        "cloudflare-dns.com",
+        "challenges.cloudflare.com",
+        "cdnjs.cloudflare.com"
+      ],
+      "excludedInitiatorDomains": [
+        "cloudflare.com",
+        "challenges.cloudflare.com"
+      ],
       "excludedUrlPathContains": [
         "cdn-cgi/challenge-platform",
         "cf-challenge",

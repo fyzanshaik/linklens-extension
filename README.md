@@ -1,6 +1,6 @@
 # 🔍 LinkLens
 
-**Version 1.3.1** - Instant link previews without leaving your page.
+**Version 1.3.2** - Instant link previews without leaving your page.
 
 *Previously known as Glimpse*
 
@@ -10,12 +10,14 @@ Hold `Ctrl` + click any link to preview it in a floating window. No more tab swi
 
 ## ✨ Features
 
-- **🖱️ Instant Previews**: `Ctrl` + click any link
-- **🎨 Sleek Design**: Minimal 40px header, responsive buttons
+- **🖱️ Instant Previews**: `Ctrl` + click any link for zero-jitter instant previews
+- **🎨 Highly Customizable**: Theme colors, window size, backdrop blur, animations, and more
+- **⚡ Blazing Fast**: Animations OFF by default for instant, smooth previews
 - **🛡️ Smart Cloudflare**: Works on protected sites, disables only during challenges
+- **🌐 Universal Compatibility**: Works on sites with X-Frame-Options (pkg.go.dev, docs sites, etc.)
 - **🔐 Privacy First**: No data collection, local processing only
-- **📱 Responsive**: Works on all screen sizes
-- **⚡ Reliable**: Enterprise-grade error handling
+- **📱 Fully Responsive**: Adaptive UI across all screen sizes
+- **🎯 Reliable**: Enterprise-grade error handling & fallback mechanisms
 
 ---
 
@@ -33,9 +35,60 @@ Extension is under review for publication.
 
 ---
 
+## ⚙️ Customization
+
+Access settings by clicking the LinkLens icon in your browser toolbar. Available options:
+
+### 🔧 Trigger Settings
+- **Modifier Key**: Choose between Ctrl, Alt, or Shift
+- **Mac Support**: Auto-use Cmd key instead of Ctrl on macOS
+
+### 🎨 Appearance
+- **Theme Color**: 6 beautiful preset colors
+- **Apply Theme to Header**: Optional themed preview window header
+- **Dark Mode**: Enable dark theme for preview windows
+- **Window Size**: Adjust default preview size (60-95%)
+- **Background Opacity**: Control overlay darkness (20-90%)
+- **Backdrop Blur**: Toggle background blur effect (OFF by default)
+
+### ⚙️ Behavior
+- **Auto-close Timer**: Automatically close previews after inactivity (0-30s)
+- **Show Animations**: Toggle smooth transitions (OFF by default for best performance)
+- **Sound Effects**: Optional subtle interaction sounds
+
+---
+
 ## 📋 Changelog
 
-### v1.3.1 (Latest) - Enhanced UI & Theme Control
+### v1.3.2 (Latest) - Performance & Compatibility Overhaul
+#### 🔧 Critical Fixes
+- **Fixed**: Re-enabled declarativeNetRequest to strip X-Frame-Options headers
+- **Fixed**: Sites like `pkg.go.dev`, `docs.python.org`, and others now work in iframe previews
+- **Fixed**: Backdrop blur showing when disabled in settings
+- **Fixed**: Button size inconsistency - close (X) and open (⧉) buttons now identical size
+- **Fixed**: Animation jitter and sluggishness on complex pages
+
+#### ⚡ Performance Improvements
+- **Optimized**: Separated blur animation from opacity for 60fps performance
+- **Added**: GPU acceleration with `will-change` hints and `translateZ(0)`
+- **Improved**: Hardware-accelerated transforms for smooth animations
+- **Enhanced**: Memory management - auto-cleanup of `will-change` after animations
+- **Default**: Animations OFF for instant, zero-jitter previews
+
+#### 🎨 UI Enhancements
+- **Improved**: Enhanced backdrop blur with smoother animation (8px blur)
+- **Added**: Backdrop Blur toggle in settings (OFF by default)
+- **Fixed**: Button visual consistency across all screen sizes
+- **Enhanced**: Better shadows, rounded corners (16px), and modern polish
+- **Improved**: Responsive button sizing with proper min-width/min-height
+
+#### 🛡️ Security & Compatibility
+- **Enhanced**: Comprehensive Cloudflare domain exclusions (cloudflare.com, challenges.cloudflare.com, etc.)
+- **Added**: Defense-in-depth with both domain AND path-based exclusions
+- **Maintained**: Smart Cloudflare detection still works for active challenge pages
+- **Safe**: Never strips headers from Cloudflare verification resources
+
+### v1.3.1 - Enhanced UI & Theme Control
 - **Fixed**: Theme color changes now properly apply to preview window header
 - **Fixed**: Animation toggle now works correctly
 - **Added**: Background opacity control for overlay darkness adjustment

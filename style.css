@@ -10,11 +10,20 @@ body.linklens-active {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 2147483647;
-  backdrop-filter: blur(5px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: linklens-fade-in 0.2s ease-out;
+  animation: linklens-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.linklens-backdrop.backdrop-blur-enabled {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  animation: linklens-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1), linklens-blur-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: opacity, backdrop-filter;
 }
 
 @keyframes linklens-fade-in {
@@ -26,19 +35,43 @@ body.linklens-active {
   }
 }
 
+@keyframes linklens-blur-in {
+  from {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* Remove will-change after animations complete for better performance */
+.linklens-backdrop.animation-complete {
+  will-change: auto;
+}
+
+.linklens-backdrop.animation-complete .linklens-overlay {
+  will-change: auto;
+}
+
 .linklens-overlay {
   position: relative;
   width: 80vw;
   height: 95vh;
   max-width: 1200px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transform: scale(0.98);
-  animation: linklens-appear 0.2s ease-out forwards;
+  transform: scale(0.95) translateY(20px) translateZ(0);
+  opacity: 0;
+  animation: linklens-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 .linklens-overlay.dark-mode {
@@ -51,10 +84,22 @@ body.linklens-active {
   transition: none !important;
 }
 
+.linklens-backdrop.no-animations {
+  animation: none !important;
+  will-change: auto !important;
+}
+
+.linklens-backdrop.no-animations.backdrop-blur-enabled {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
 .linklens-backdrop.no-animations .linklens-overlay {
   animation: none !important;
-  transform: scale(1) !important;
+  transform: scale(1) translateY(0) translateZ(0) !important;
+  opacity: 1 !important;
   transition: none !important;
+  will-change: auto !important;
 }
 
 .linklens-backdrop.no-animations * {
@@ -64,7 +109,8 @@ body.linklens-active {
 
 @keyframes linklens-appear {
   to {
-    transform: scale(1);
+    transform: scale(1) translateY(0) translateZ(0);
+    opacity: 1;
   }
 }
 
@@ -119,7 +165,7 @@ body.linklens-active {
   height: 24px;
   padding: 0;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   background: transparent;
   color: #6b7280;
   font-size: 16px;
@@ -128,29 +174,46 @@ body.linklens-active {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
   opacity: 0.8;
   line-height: 1;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .linklens-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.08);
   color: #374151;
   opacity: 1;
+  transform: scale(1.05);
+}
+
+.linklens-btn:active {
+  transform: scale(0.95);
+}
+
+.linklens-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
 }
 
 .linklens-close:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.12);
   color: #dc2626;
   opacity: 1;
+  transform: scale(1.05);
 }
 
 .linklens-reopen:hover {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(59, 130, 246, 0.12);
   color: #2563eb;
   opacity: 1;
+  transform: scale(1.05);
 }
 
 .linklens-close,
@@ -159,9 +222,20 @@ body.linklens-active {
   font-weight: 400;
   width: 24px;
   height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
+}
+
+.linklens-close {
+  font-size: 18px;
+}
+
+.linklens-reopen {
+  font-size: 16px;
 }
 
 .linklens-content {
@@ -169,26 +243,28 @@ body.linklens-active {
   position: relative;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #adb5bd #f1f3f5;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .linklens-content::-webkit-scrollbar {
-  width: 14px;
+  width: 12px;
 }
 
 .linklens-content::-webkit-scrollbar-track {
   background: transparent;
+  margin: 4px 0;
 }
 
 .linklens-content::-webkit-scrollbar-thumb {
-  background-color: #adb5bd;
-  border-radius: 20px;
-  border: 4px solid transparent;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  border: 3px solid transparent;
   background-clip: content-box;
+  transition: background-color 0.2s ease;
 }
 
 .linklens-content::-webkit-scrollbar-thumb:hover {
-  background-color: #868e96;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .linklens-iframe {
@@ -204,51 +280,62 @@ body.linklens-active {
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 40px;
+  padding: 48px;
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(168, 85, 247, 0.03) 100%);
 }
 
 .linklens-error h3 {
-  margin: 0 0 12px 0;
-  font-size: 18px;
+  margin: 0 0 16px 0;
+  font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #1f2937;
+  letter-spacing: -0.02em;
 }
 
 .linklens-error p {
-  margin: 0 0 24px 0;
-  font-size: 14px;
-  color: #666;
-  line-height: 1.5;
+  margin: 0 0 32px 0;
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 400px;
 }
 
 .linklens-open-direct {
-  background: #007bff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   border: none;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  padding: 12px 24px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .linklens-open-direct:hover {
-  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.linklens-open-direct:active {
+  transform: translateY(0);
 }
 
 @media (prefers-color-scheme: dark) {
   .linklens-overlay {
-    background: #1a1a1a;
-    color: #e0e0e0;
+    background: #111827;
+    color: #e5e7eb;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.5);
   }
   .linklens-header {
     background: rgba(31, 41, 55, 0.95);
     border-color: rgba(75, 85, 99, 0.3);
   }
   .linklens-title-text {
-    color: #d1d5db;
+    color: #e5e7eb;
   }
   .linklens-btn {
     color: #9ca3af;
@@ -256,6 +343,9 @@ body.linklens-active {
   .linklens-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #f3f4f6;
+  }
+  .linklens-btn:focus-visible {
+    outline-color: rgba(96, 165, 250, 0.5);
   }
   .linklens-close:hover {
     background: rgba(239, 68, 68, 0.2);
@@ -265,14 +355,20 @@ body.linklens-active {
     background: rgba(59, 130, 246, 0.2);
     color: #60a5fa;
   }
+  .linklens-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  .linklens-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
   .linklens-error {
-    color: #e0e0e0;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
   }
   .linklens-error h3 {
-    color: #e0e0e0;
+    color: #f3f4f6;
   }
   .linklens-error p {
-    color: #b0b0b0;
+    color: #9ca3af;
   }
 }
 
@@ -282,7 +378,13 @@ body.linklens-active {
   .linklens-reopen {
     width: 22px;
     height: 22px;
+    min-width: 22px;
+    min-height: 22px;
     font-size: 14px;
+  }
+
+  .linklens-close {
+    font-size: 16px;
   }
 }
 
@@ -292,7 +394,13 @@ body.linklens-active {
   .linklens-reopen {
     width: 20px;
     height: 20px;
+    min-width: 20px;
+    min-height: 20px;
     font-size: 13px;
+  }
+
+  .linklens-close {
+    font-size: 15px;
   }
 }
 
@@ -302,7 +410,13 @@ body.linklens-active {
   .linklens-reopen {
     width: 26px;
     height: 26px;
+    min-width: 26px;
+    min-height: 26px;
     font-size: 17px;
+  }
+
+  .linklens-close {
+    font-size: 19px;
   }
 }
 
@@ -312,6 +426,12 @@ body.linklens-active {
   .linklens-reopen {
     width: 28px;
     height: 28px;
+    min-width: 28px;
+    min-height: 28px;
     font-size: 18px;
+  }
+
+  .linklens-close {
+    font-size: 20px;
   }
 } 
