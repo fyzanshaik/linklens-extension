@@ -6,7 +6,7 @@
 
 *Formerly known as Glimpse*
 
-[![Version](https://img.shields.io/badge/version-1.3.3-blue.svg)](https://github.com/fyzanshaik/linklens-extension/releases)
+[![Version](https://img.shields.io/badge/version-1.3.4-blue.svg)](https://github.com/fyzanshaik/linklens-extension/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/chrome-web%20store-orange.svg)](https://chromewebstore.google.com/detail/linklens/gpbempopkomagldobkjildebaendgonn)
 
@@ -168,7 +168,24 @@ LinkLens is built with privacy as a core principle:
 ## 📋 Changelog
 
 <details>
-<summary><strong>v1.3.3 (Latest)</strong> - Long Click Support 🖱️</summary>
+<summary><strong>v1.3.4 (Latest)</strong> - Critical Bug Fixes 🐛</summary>
+
+#### 🔧 Bug Fixes
+- **Fixed**: Long-press feature breaking normal clicks on complex sites (Reddit, social media)
+  - Removed visual feedback that was interfering with click event detection
+  - Simplified navigation prevention logic
+  - Normal clicks now work perfectly alongside long-press feature
+- **Fixed**: Favicon and title misalignment in preview header
+  - Added proper vertical centering for consistent alignment across all websites
+- **Fixed**: Dark mode not applying to backdrop
+  - Backdrop now turns solid black when dark mode is enabled
+  - Blur is automatically disabled in dark mode for clean appearance
+  - Dark mode settings now update immediately without reload
+
+</details>
+
+<details>
+<summary><strong>v1.3.3</strong> - Long Click Support 🖱️</summary>
 
 #### ✨ New Feature - Issue #3
 - **Added**: Long-press/long-click trigger to open previews without modifier keys

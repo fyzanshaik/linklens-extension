@@ -2,16 +2,6 @@ body.linklens-active {
   overflow: hidden;
 }
 
-/* Long click visual feedback */
-a.linklens-long-click-active {
-  position: relative;
-  background-color: rgba(102, 126, 234, 0.08) !important;
-  border-radius: 3px;
-  outline: 2px solid rgba(102, 126, 234, 0.3) !important;
-  outline-offset: 2px;
-  transition: background-color 0.2s ease, outline 0.2s ease;
-}
-
 .linklens-backdrop {
   position: fixed;
   top: 0;
@@ -85,8 +75,69 @@ a.linklens-long-click-active {
 }
 
 .linklens-overlay.dark-mode {
-  background: #1a1a1a;
-  color: #e0e0e0;
+  background: #000000 !important;
+  color: #e5e7eb;
+}
+
+.linklens-overlay.dark-mode .linklens-header {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.linklens-overlay.dark-mode .linklens-title-text {
+  color: #e5e7eb !important;
+}
+
+.linklens-overlay.dark-mode .linklens-btn {
+  color: #9ca3af;
+}
+
+.linklens-overlay.dark-mode .linklens-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #f3f4f6 !important;
+}
+
+.linklens-overlay.dark-mode .linklens-close:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+}
+
+.linklens-overlay.dark-mode .linklens-reopen:hover {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #60a5fa !important;
+}
+
+.linklens-overlay.dark-mode .linklens-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.linklens-overlay.dark-mode .linklens-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.linklens-overlay.dark-mode .linklens-error {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+}
+
+.linklens-overlay.dark-mode .linklens-error h3 {
+  color: #f3f4f6;
+}
+
+.linklens-overlay.dark-mode .linklens-error p {
+  color: #9ca3af;
+}
+
+/* Dark mode backdrop - solid black background, no blur */
+.linklens-backdrop.dark-mode-backdrop {
+  background-color: rgba(0, 0, 0, 1) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.linklens-backdrop.dark-mode-backdrop.backdrop-blur-enabled {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  animation: linklens-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .linklens-backdrop.no-animations {
@@ -151,6 +202,9 @@ a.linklens-long-click-active {
   height: 14px;
   flex-shrink: 0;
   border-radius: 2px;
+  display: block;
+  object-fit: contain;
+  align-self: center;
 }
 
 .linklens-title-text {
@@ -162,6 +216,8 @@ a.linklens-long-click-active {
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: -0.005em;
+  line-height: 14px;
+  align-self: center;
 }
 
 .linklens-controls {

@@ -33,6 +33,7 @@ class LinkLens {
     this.longClickTimer = null;
     this.longClickTarget = null;
     this.longClickStartPos = { x: 0, y: 0 };
+    this.longClickCompleted = false;
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -112,13 +113,22 @@ class LinkLens {
     if (message.action === 'settingsUpdated') {
       this.settings = { ...this.settings, ...message.settings };
       // console.log('[LinkLens] Settings updated:', this.settings);
-      
+
       // Update theme immediately if there's an active overlay
       if (this.overlay) {
-        const backdrop = this.overlay.parentElement;
-        this.applyThemeSettings(this.overlay, backdrop);
+        const backdrop = this.overlay;
+        const overlayElement = backdrop.querySelector('.linklens-overlay');
+
+        // Update dark mode classes
+        if (this.settings.darkMode) {
+          overlayElement?.classList.add('dark-mode');
+        } else {
+          overlayElement?.classList.remove('dark-mode');
+        }
+
+        this.applyThemeSettings(overlayElement, backdrop);
       }
-      
+
       sendResponse({ success: true });
     }
   }
@@ -340,13 +350,11 @@ class LinkLens {
 
       this.longClickTarget = link;
       this.longClickStartPos = { x: event.clientX, y: event.clientY };
-
-      // Add visual feedback
-      link.classList.add('linklens-long-click-active');
+      this.longClickCompleted = false;
 
       this.longClickTimer = setTimeout(() => {
         if (this.longClickTarget === link) {
-          event.preventDefault();
+          this.longClickCompleted = true;
           this.createLinkLens(link.href);
           this.cancelLongClick();
         }
@@ -358,6 +366,21 @@ class LinkLens {
 
   handleMouseUp(event) {
     try {
+      // If long click completed, prevent the click event
+      if (this.longClickCompleted) {
+        const link = this.longClickTarget;
+        const preventClick = (e) => {
+          const clickedLink = e.target?.closest?.('a');
+          if (clickedLink === link) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          }
+        };
+        document.addEventListener('click', preventClick, { capture: true, once: true });
+        this.longClickCompleted = false;
+      }
+
       // Cancel long click if mouse is released before duration completes
       this.cancelLongClick();
     } catch (error) {
@@ -391,10 +414,7 @@ class LinkLens {
         this.longClickTimer = null;
       }
 
-      if (this.longClickTarget) {
-        this.longClickTarget.classList.remove('linklens-long-click-active');
-        this.longClickTarget = null;
-      }
+      this.longClickTarget = null;
     } catch (error) {
       console.warn('[LinkLens] Failed to cancel long click:', error);
     }
@@ -476,6 +496,7 @@ class LinkLens {
 
     if (this.settings.darkMode) {
       overlay.classList.add('dark-mode');
+      backdrop.classList.add('dark-mode-backdrop');
     }
 
     this.applyThemeSettings(overlay, backdrop);
@@ -779,14 +800,21 @@ class LinkLens {
   applyThemeSettings(overlay, backdrop) {
     try {
       if (backdrop && backdrop.classList.contains('linklens-backdrop')) {
-        const opacity = this.settings.backgroundOpacity / 100;
-        backdrop.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
-
-        // Apply or remove backdrop blur class
-        if (this.settings.backdropBlur) {
-          backdrop.classList.add('backdrop-blur-enabled');
+        // Apply dark mode backdrop
+        if (this.settings.darkMode) {
+          backdrop.classList.add('dark-mode-backdrop');
+          backdrop.style.backgroundColor = 'rgba(0, 0, 0, 1)';
         } else {
-          backdrop.classList.remove('backdrop-blur-enabled');
+          backdrop.classList.remove('dark-mode-backdrop');
+          const opacity = this.settings.backgroundOpacity / 100;
+          backdrop.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+
+          // Apply or remove backdrop blur class (only when not in dark mode)
+          if (this.settings.backdropBlur) {
+            backdrop.classList.add('backdrop-blur-enabled');
+          } else {
+            backdrop.classList.remove('backdrop-blur-enabled');
+          }
         }
       }
 
